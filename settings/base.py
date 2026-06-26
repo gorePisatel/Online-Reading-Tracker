@@ -3,11 +3,15 @@ import os
 from settings.conf import *  #noqa
 
 
+# Path
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ROOT_URLCONF = 'settings.urls'
 WSGI_APPLICATION = 'settings.wsgi.application'
+ASGI_APPLICATION = 'settings.asgi.application'
 
 
+# Apps
 
 DJANGO_AND_THIRD_PARTY_APPS = [
     'django.contrib.admin',
@@ -22,6 +26,8 @@ PROJECT_APPS = [
 ]
 INSTALLED_APPS = DJANGO_AND_THIRD_PARTY_APPS + PROJECT_APPS
 
+
+# Middleware | Templates | Validators
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,10 +72,15 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+# Internationalization
+
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
+
+
+# Satic
 
 STATIC_URL = 'static/'
 
