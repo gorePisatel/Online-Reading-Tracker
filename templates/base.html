@@ -1,0 +1,57 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BookLIB - Reading Tracker{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+    <!-- BookLIB Navigation Bar -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="{% url 'book_list' %}" class="logo">BookLIB</a>
+            <nav class="nav-links">
+                <a href="{% url 'book_list' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'my_library' %}">My Books</a>
+                    <span class="user-badge">Hello, {{ user.username }}!</span>
+                    <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'register' %}" class="btn-accent">Register</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <!-- System Messages (Success / Error alerts) -->
+    {% if messages %}
+        <div class="container messages-container">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content Wrapper -->
+    <main class="main-content">
+        <div class="container">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 BookLIB. Developed by team gorePisatel.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

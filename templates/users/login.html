@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign In - BookLIB{% endblock %}
+
+{% block content %}
+<div class="form-wrapper">
+    <h2>Sign In to Your Account</h2>
+    <form method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="alert-error">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit" class="btn-accent" style="width: 100%; border: none; cursor: pointer;">Login</button>
+    </form>
+</div>
+{% endblock %}

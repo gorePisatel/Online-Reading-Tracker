@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} - BookLIB{% endblock %}
+
+{% block content %}
+<div style="display: flex; gap: 40px; margin-top: 40px;">
+    <div style="width: 250px;">
+        <div class="book-cover-placeholder" style="height: 350px;"></div>
+        {% if user.is_authenticated %}
+            <form method="POST" action="{% url 'add_to_library' book.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-accent" style="width:100%; border:none; cursor:pointer; margin-top:15px;">
+                    Add to My Library
+                </button>
+            </form>
+        {% endif %}
+    </div>
+    
+    <div style="flex: 1;">
+        <h1>{{ book.title }}</h1>
+        <h3>Author: {{ book.author_name }}</h3>
+        <p><strong>Genre:</strong> {{ book.genre.name }}</p>
+        <p><strong>Total Pages:</strong> {{ book.total_pages }}</p>
+        <hr>
+        <p>{{ book.description }}</p>
+        
+        <!-- Authorized Management Actions (CRUD Access Control) -->
+        {% if user == book.created_by %}
+            <div style="margin-top: 20px;">
+                <a href="{% url 'book_update' book.id %}" class="btn-accent" style="background-color: #28a745;">Edit Book Details</a>
+                <a href="{% url 'book_delete' book.id %}" class="btn-accent" style="background-color: #dc3545;">Delete From System</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
