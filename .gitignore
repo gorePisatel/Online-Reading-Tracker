@@ -13,4 +13,5 @@ db.sqlite3
 *.pdf
 *.md
 !README.md
+!TEST_DISTRIBUTION_1.md
 docs/some_documents
