@@ -8,3 +8,9 @@ __pycache__/
 
 
 db.sqlite3
+
+
+*.pdf
+*.md
+!README.md
+docs/some_documents
