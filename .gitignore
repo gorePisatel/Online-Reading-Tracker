@@ -15,3 +15,5 @@ db.sqlite3
 !README.md
 !TEST_DISTRIBUTION_1.md
 docs/some_documents
+.DS_Store
+*.jpeg

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Settings - BookLIB{% endblock %}
+
+{% block content %}
+<div class="form-wrapper">
+    <h2>Edit Profile</h2>
+    <form method="POST" action="{% url 'user_settings' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% for field in user_form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="alert-error">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% for field in settings_form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <span class="alert-error">{{ field.errors|striptags }}</span>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn-accent" style="width: 100%; border: none; cursor: pointer;">Save</button>
+    </form>
+</div>
+{% endblock %}

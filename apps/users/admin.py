@@ -1,8 +1,7 @@
-from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.admin import register
+from django.contrib.admin import register, ModelAdmin
 
-from apps.users.models import CustomUser
+from apps.users.models import CustomUser, UserSettings
 
 
 @register(CustomUser)
@@ -23,7 +22,7 @@ class CustomUserAdmin(UserAdmin):
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (_('Personal info'), {
+        (('Personal info'), {
             'fields': (
                 'username',
                 'first_name',
@@ -32,8 +31,8 @@ class CustomUserAdmin(UserAdmin):
                 'bio',
             ),
         }),
-        (_('Role'), {'fields': ('role',)}),
-        (_('Permissions'), {
+        (('Role'), {'fields': ('role',)}),
+        (('Permissions'), {
             'fields': (
                 'is_active',
                 'is_staff',
@@ -42,7 +41,7 @@ class CustomUserAdmin(UserAdmin):
                 'user_permissions',
             ),
         }),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
@@ -59,3 +58,16 @@ class CustomUserAdmin(UserAdmin):
             ),
         }),
     )
+
+@register(UserSettings)
+class UserSettingsAdmin(ModelAdmin):
+    list_display = (
+        'user',
+        'theme',
+        'is_private',
+        'notifications_enabled',
+        'created_at',
+        'updated_at',
+    )
+    search_fields = ('user__email', 'user__username')
+    list_filter = ('theme', 'is_private', 'notifications_enabled')

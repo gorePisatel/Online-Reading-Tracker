@@ -5,7 +5,7 @@
 {% block content %}
 <div class="form-wrapper">
     <h2>Create an Account</h2>
-    <form method="POST" action="{% url 'register' %}">
+    <form method="POST" action="{% url 'register' %}" enctype="multipart/form-data">
         {% csrf_token %}
         {% for field in form %}
             <div class="form-group">

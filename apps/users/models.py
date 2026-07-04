@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -13,7 +15,6 @@ from django.db.models import (
     OneToOneField,
     BooleanField,
     TextField,
-
     Model,
     CASCADE,
 )
@@ -81,9 +82,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username'] 
 
-    def __str__(self) -> str:
-        return self.username
-    
     @property
     def is_admin(self) -> bool:
         return self.role == self.Roles.ADMIN
@@ -92,6 +90,8 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def is_moderator(self) -> bool:
         return self.role == self.Roles.MODERATOR
     
+    def __str__(self) -> str:
+        return self.username
 
 class UserSettings(Model):
 
