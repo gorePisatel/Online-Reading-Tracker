@@ -113,6 +113,16 @@ python manage.py createsuperuser
 python manage.py runserver
 ```
 
+For production or hosting with `PROJECT_ENV_ID=prod`, collect static files before
+starting the app:
+
+```bash
+python manage.py collectstatic --noinput
+```
+
+Static CSS, JavaScript, and images are served through WhiteNoise, so make sure
+dependencies from `requirements.txt` are installed after pulling the repository.
+
 Open:
 
 ```text
