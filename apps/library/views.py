@@ -7,7 +7,7 @@ from .forms import BookForm
 
 
 def book_list(request):
-    books = Book.objects.all()
+    books = Book.objects.select_related("genre").all()
     genres = Genre.objects.all()
 
     search = request.GET.get("search")
@@ -19,9 +19,29 @@ def book_list(request):
     if genre:
         books = books.filter(genre_id=genre)
 
+    books_by_genre = []
+    for genre_item in genres:
+        genre_books = books.filter(genre=genre_item)
+        if genre_books.exists():
+            books_by_genre.append((genre_item, genre_books[:6]))
+
+    user_progress = []
+    if request.user.is_authenticated:
+        from apps.tracker.models import ReadingProgress
+
+        user_progress = (
+            ReadingProgress.objects
+            .filter(user=request.user, status="reading")
+            .select_related("book", "book__genre")[:6]
+        )
+
     context = {
         "books": books,
         "genres": genres,
+        "books_by_genre": books_by_genre,
+        "user_progress": user_progress,
+        "selected_genre": genre,
+        "search_query": search or "",
     }
 
     return render(

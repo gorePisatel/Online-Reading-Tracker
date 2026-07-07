@@ -93,6 +93,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self) -> str:
         return self.username
 
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
 class UserSettings(Model):
 
     class ThemeChoices(TextChoices):
@@ -117,3 +121,7 @@ class UserSettings(Model):
 
     def __str__(self):
         return f'Settings for {self.user.username}'
+
+    class Meta:
+        verbose_name = 'User settings'
+        verbose_name_plural = 'User settings'

@@ -19,10 +19,6 @@ class RegistrationForm(forms.ModelForm):
             "username",
             "password1",
             "password2",
-            "first_name",
-            "last_name",
-            "avatar",
-            "bio",
         ]
 
     def clean(self):
@@ -43,7 +39,7 @@ class RegistrationForm(forms.ModelForm):
 
         if commit:
             user.save()
-            UserSettings.objects.create(user=user)
+            UserSettings.objects.get_or_create(user=user)
 
         return user
 

@@ -5,30 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}BookLIB - Reading Tracker{% endblock %}</title>
-    {% load static %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body>
-
-    <!-- BookLIB Navigation Bar -->
+<body data-theme="{% if user.is_authenticated and user.settings.theme %}{{ user.settings.theme }}{% else %}light{% endif %}">
     <header class="navbar">
         <div class="container nav-container">
-            <a href="{% url 'book_list' %}" class="logo">BookLIB</a>
+            <a href="{% url 'book_list' %}" class="logo" aria-label="BookLIB home">
+                <img src="{% static 'images/booklib-logo.svg' %}" alt="BookLIB" class="logo-img">
+            </a>
             <nav class="nav-links">
                 <a href="{% url 'book_list' %}">Home</a>
                 {% if user.is_authenticated %}
                     <a href="{% url 'my_library' %}">My Books</a>
-                    <span class="user-badge">Hello, {{ user.username }}!</span>
-                    <a href="{% url 'logout' %}" class="btn-logout">Logout</a>
                 {% else %}
                     <a href="{% url 'login' %}">Login</a>
                     <a href="{% url 'register' %}" class="btn-accent">Register</a>
                 {% endif %}
             </nav>
+            {% if user.is_authenticated %}
+                <div class="profile-menu">
+                    <button class="avatar-button" type="button" aria-label="Open profile menu" aria-expanded="false" data-profile-toggle>
+                        {% if user.avatar %}
+                            <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="avatar-img" onerror="this.onerror=null; this.src='{% static 'images/default-avatar.svg' %}';">
+                        {% else %}
+                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="avatar-img">
+                        {% endif %}
+                    </button>
+                    <div class="profile-dropdown" data-profile-menu>
+                        <a href="{% url 'profile' %}">My profile</a>
+                        <a href="{% url 'user_settings' %}">Settings</a>
+                        <div class="dropdown-divider"></div>
+                        <div class="theme-switch" role="group" aria-label="Theme switch">
+                            <button type="button" data-theme-choice="light">Light</button>
+                            <button type="button" data-theme-choice="dark">Dark</button>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <form method="POST" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="dropdown-action">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </header>
 
-    <!-- System Messages (Success / Error alerts) -->
     {% if messages %}
         <div class="container messages-container">
             {% for message in messages %}
@@ -39,7 +63,6 @@
         </div>
     {% endif %}
 
-    <!-- Main Content Wrapper -->
     <main class="main-content">
         <div class="container">
             {% block content %}
@@ -53,5 +76,12 @@
         </div>
     </footer>
 
+    <script>
+        window.BookLIBTheme = {
+            endpoint: "{% if user.is_authenticated %}{% url 'set_theme' %}{% endif %}",
+            csrfToken: "{{ csrf_token }}",
+        };
+    </script>
+    <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>

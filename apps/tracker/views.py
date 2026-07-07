@@ -18,7 +18,7 @@ def my_library(request):
         request,
         "tracker/my_library.html",
         {
-            "books": books
+            "library_items": books
         }
     )
 

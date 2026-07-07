@@ -1,6 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import redirect, render
 
 from .forms import RegistrationForm, UserSettingsForm, UserUpdateForm
@@ -77,3 +79,18 @@ def settings_view(request):
             "settings_form": settings_form,
         },
     )
+
+
+@login_required
+@require_POST
+def set_theme_view(request):
+    theme = request.POST.get("theme")
+
+    if theme not in dict(UserSettings.ThemeChoices.choices):
+        return JsonResponse({"ok": False, "error": "Invalid theme."}, status=400)
+
+    user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
+    user_settings.theme = theme
+    user_settings.save(update_fields=["theme", "updated_at"])
+
+    return JsonResponse({"ok": True, "theme": theme})
