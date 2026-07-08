@@ -66,7 +66,6 @@ def book_create(request):
             book.save()
 
             messages.success(request, "Book created successfully.")
-
             return redirect("book_list")
 
     else:
@@ -86,8 +85,8 @@ def book_update(request, pk):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Book updated successfully.")
 
+            messages.success(request, "Book updated successfully.")
             return redirect("book_detail", pk=book.id)
 
     else:
@@ -104,8 +103,8 @@ def book_delete(request, pk):
 
     if request.method == "POST":
         book.delete()
-        messages.success(request, "Book deleted successfully.")
 
+        messages.success(request, "Book deleted successfully.")
         return redirect("book_list")
 
     context = {"book": book}

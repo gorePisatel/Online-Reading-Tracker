@@ -1,10 +1,10 @@
-from django.contrib import admin
+from django.contrib.admin import ModelAdmin, register
 
 from .models import ReadingProgress, Review
 
 
-@admin.register(ReadingProgress)
-class ReadingProgressAdmin(admin.ModelAdmin):
+@register(ReadingProgress)
+class ReadingProgressAdmin(ModelAdmin):
 
     list_display = (
         "user",
@@ -12,14 +12,11 @@ class ReadingProgressAdmin(admin.ModelAdmin):
         "status",
         "current_page",
     )
-
-    list_filter = (
-        "status",
-    )
+    list_filter = ("status",)
 
 
-@admin.register(Review)
-class ReviewAdmin(admin.ModelAdmin):
+@register(Review)
+class ReviewAdmin(ModelAdmin):
 
     list_display = (
         "user",
@@ -27,7 +24,4 @@ class ReviewAdmin(admin.ModelAdmin):
         "rating",
         "created_at",
     )
-
-    list_filter = (
-        "rating",
-    )
+    list_filter = ("rating",)

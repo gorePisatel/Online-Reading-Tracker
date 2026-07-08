@@ -1,10 +1,18 @@
-from django.db import models
+from django.db.models import (
+    CharField,
+    PositiveIntegerField,
+    DateTimeField,
+    ForeignKey,
+    TextField,
+    Model,
+    CASCADE,
+)
 from django.conf import settings
 
 from apps.library.models import Book
 
 
-class ReadingProgress(models.Model):
+class ReadingProgress(Model):
 
     STATUS_CHOICES = [
         ("want_to_read", "Want to Read"),
@@ -13,33 +21,17 @@ class ReadingProgress(models.Model):
         ("dropped", "Dropped"),
     ]
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE,)
+    book = ForeignKey(Book, on_delete=CASCADE,)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default="want_to_read",)
+    current_page = PositiveIntegerField(default=0)
 
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-    )
-
-    status = models.CharField(
-        max_length=20,
-        choices=STATUS_CHOICES,
-        default="want_to_read",
-    )
-
-    current_page = models.PositiveIntegerField(default=0)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     @property
     def progress_percent(self):
-        return int(
-            (self.current_page / self.book.total_pages) * 100
-        )
+        return int((self.current_page / self.book.total_pages) * 100)
 
     class Meta:
         unique_together = ("user", "book")
@@ -48,25 +40,14 @@ class ReadingProgress(models.Model):
         return f"{self.user.username} - {self.book.title}"
 
 
-class Review(models.Model):
+class Review(Model):
 
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-    )
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE,)
+    book = ForeignKey(Book, on_delete=CASCADE,)
+    rating = PositiveIntegerField()
+    text = TextField()
 
-    book = models.ForeignKey(
-        Book,
-        on_delete=models.CASCADE,
-    )
-
-    rating = models.PositiveIntegerField()
-
-    text = models.TextField()
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
+    created_at = DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.book.title} - {self.rating}"
