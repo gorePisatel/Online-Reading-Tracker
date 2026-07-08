@@ -15,27 +15,27 @@ class RegistrationForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = [
-            "email",
-            "username",
-            "password1",
-            "password2",
+            'email',
+            'username',
+            'password1',
+            'password2',
         ]
 
     def clean(self):
         cleaned_data = super().clean()
 
-        password1 = cleaned_data.get("password1")
-        password2 = cleaned_data.get("password2")
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
 
         if password1 != password2:
-            raise ValidationError("Passwords do not match.")
+            raise ValidationError('Passwords do not match.')
 
         return cleaned_data
 
     def save(self, commit=True):
         user = super().save(commit=False)
 
-        user.set_password(self.cleaned_data["password1"])
+        user.set_password(self.cleaned_data['password1'])
 
         if commit:
             user.save()
@@ -49,9 +49,9 @@ class UserSettingsForm(ModelForm):
     class Meta:
         model = UserSettings
         fields = [
-            "theme",
-            "is_private",
-            "notifications_enabled",
+            'theme',
+            'is_private',
+            'notifications_enabled',
         ]
 
 
@@ -60,9 +60,9 @@ class UserUpdateForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = [
-            "username",
-            "first_name",
-            "last_name",
-            "avatar",
-            "bio",
+            'username',
+            'first_name',
+            'last_name',
+            'avatar',
+            'bio',
         ]

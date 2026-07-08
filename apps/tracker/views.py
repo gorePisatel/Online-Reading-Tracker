@@ -10,9 +10,9 @@ from apps.library.models import Book
 @login_required
 def my_library(request):
     books = ReadingProgress.objects.filter(user=request.user)
-    context = {"library_items": books}
+    context = {'library_items': books}
 
-    return render(request, "tracker/my_library.html", context)
+    return render(request, 'tracker/my_library.html', context)
 
 
 @login_required
@@ -20,36 +20,36 @@ def add_to_library(request, pk):
     book = get_object_or_404(Book, id=pk)
     ReadingProgress.objects.get_or_create(user=request.user, book=book)
 
-    messages.success(request, "Book added to your library.")
-    return redirect("my_library")
+    messages.success(request, 'Book added to your library.')
+    return redirect('my_library')
 
 
 @login_required
 def update_progress(request, pk):
     progress = get_object_or_404(ReadingProgress,id=pk, user=request.user)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = ReadingProgressForm(request.POST, instance=progress)
 
         if form.is_valid():
             form.save()
 
-            messages.success(request, "Progress updated.")
-            return redirect("my_library")
+            messages.success(request, 'Progress updated.')
+            return redirect('my_library')
 
     else:
         form = ReadingProgressForm(instance=progress)
 
-    context = {"form": form}
+    context = {'form': form}
 
-    return render(request, "tracker/progress_form.html", context)
+    return render(request, 'tracker/progress_form.html', context)
 
 
 @login_required
 def create_review(request, pk):
     book = get_object_or_404(Book, id=pk)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = ReviewForm(request.POST)
 
         if form.is_valid():
@@ -59,15 +59,15 @@ def create_review(request, pk):
             review.book = book
             review.save()
 
-            messages.success(request, "Review added successfully.")
-            return redirect("book_detail", pk=book.id)
+            messages.success(request, 'Review added successfully.')
+            return redirect('book_detail', pk=book.id)
 
     else:
         form = ReviewForm()
 
     context = {
-        "form": form,
-        "book": book,
+        'form': form,
+        'book': book,
         }
 
-    return render(request, "tracker/review_form.html", context)
+    return render(request, 'tracker/review_form.html', context)

@@ -15,15 +15,15 @@ from apps.library.models import Book
 class ReadingProgress(Model):
 
     STATUS_CHOICES = [
-        ("want_to_read", "Want to Read"),
-        ("reading", "Reading"),
-        ("completed", "Completed"),
-        ("dropped", "Dropped"),
+        ('want_to_read', 'Want to Read'),
+        ('reading', 'Reading'),
+        ('completed', 'Completed'),
+        ('dropped', 'Dropped'),
     ]
 
     user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE,)
     book = ForeignKey(Book, on_delete=CASCADE,)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default="want_to_read",)
+    status = CharField(max_length=20, choices=STATUS_CHOICES, default='want_to_read',)
     current_page = PositiveIntegerField(default=0)
 
     created_at = DateTimeField(auto_now_add=True)
@@ -34,10 +34,10 @@ class ReadingProgress(Model):
         return int((self.current_page / self.book.total_pages) * 100)
 
     class Meta:
-        unique_together = ("user", "book")
+        unique_together = ('user', 'book')
 
     def __str__(self):
-        return f"{self.user.username} - {self.book.title}"
+        return f'{self.user.username} - {self.book.title}'
 
 
 class Review(Model):
@@ -50,4 +50,4 @@ class Review(Model):
     created_at = DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.book.title} - {self.rating}"
+        return f'{self.book.title} - {self.rating}'

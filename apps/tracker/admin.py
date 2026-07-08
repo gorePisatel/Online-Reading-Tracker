@@ -7,21 +7,21 @@ from .models import ReadingProgress, Review
 class ReadingProgressAdmin(ModelAdmin):
 
     list_display = (
-        "user",
-        "book",
-        "status",
-        "current_page",
+        'user',
+        'book',
+        'status',
+        'current_page',
     )
-    list_filter = ("status",)
+    list_filter = ('status',)
 
 
 @register(Review)
 class ReviewAdmin(ModelAdmin):
 
     list_display = (
-        "user",
-        "book",
-        "rating",
-        "created_at",
+        'user',
+        'book',
+        'rating',
+        'created_at',
     )
-    list_filter = ("rating",)
+    list_filter = ('rating',)

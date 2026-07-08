@@ -10,38 +10,38 @@ from .models import UserSettings
 
 
 def register_view(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = RegistrationForm(request.POST, request.FILES)
 
         if form.is_valid():
             user = form.save()
             login(request, user)
 
-            messages.success(request, "Registration successful.")
-            return redirect("profile")
+            messages.success(request, 'Registration successful.')
+            return redirect('profile')
 
-        messages.error(request, "Please fix the errors below.")
+        messages.error(request, 'Please fix the errors below.')
     else:
         form = RegistrationForm()
     
-    context = {"form": form}
+    context = {'form': form}
 
-    return render(request, "users/register.html", context)
+    return render(request, 'users/register.html', context)
 
 
 @login_required
 def profile_view(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
-    context = {"user_settings": user_settings}
+    context = {'user_settings': user_settings}
 
-    return render(request, "users/profile.html", context)
+    return render(request, 'users/profile.html', context)
 
 
 @login_required
 def settings_view(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user,)
         settings_form = UserSettingsForm(request.POST, instance=user_settings,)
 
@@ -49,31 +49,31 @@ def settings_view(request):
             user_form.save()
             settings_form.save()
 
-            messages.success(request, "Profile updated successfully.")
-            return redirect("profile")
+            messages.success(request, 'Profile updated successfully.')
+            return redirect('profile')
 
-        messages.error(request, "Please fix the errors below.")
+        messages.error(request, 'Please fix the errors below.')
     else:
         user_form = UserUpdateForm(instance=request.user)
         settings_form = UserSettingsForm(instance=user_settings)
     
-    context = {"user_form": user_form,"settings_form": settings_form}
+    context = {'user_form': user_form,'settings_form': settings_form}
 
-    return render(request, "users/settings.html", context)
+    return render(request, 'users/settings.html', context)
 
 
 @login_required
 @require_POST
 def set_theme_view(request):
-    theme = request.POST.get("theme")
+    theme = request.POST.get('theme')
 
     if theme not in dict(UserSettings.ThemeChoices.choices):
-        return JsonResponse({"ok": False, "error": "Invalid theme."}, status=400)
+        return JsonResponse({'ok': False, 'error': 'Invalid theme.'}, status=400)
 
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
     user_settings.theme = theme
-    user_settings.save(update_fields=["theme", "updated_at"])
+    user_settings.save(update_fields=['theme', 'updated_at'])
 
-    context = {"ok": True, "theme": theme}
+    context = {'ok': True, 'theme': theme}
 
     return JsonResponse(context)
