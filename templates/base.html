@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body data-theme="{% if user.is_authenticated and user.settings.theme %}{{ user.settings.theme }}{% else %}light{% endif %}">
+<body data-theme="{{ current_theme|default:'light' }}">
     <header class="navbar">
         <div class="container nav-container">
             <a href="{% url 'book_list' %}" class="logo" aria-label="BookLIB home">
@@ -29,9 +29,19 @@
                 <div class="profile-menu">
                     <button class="avatar-button" type="button" aria-label="Open profile menu" aria-expanded="false" data-profile-toggle>
                         {% if user.avatar %}
-                            <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="avatar-img" onerror="this.onerror=null; this.src='{% static 'images/default-avatar.svg' %}';">
+                            <img
+                                src="{{ user.avatar.url }}"
+                                alt="{{ user.username }}"
+                                class="avatar-img"
+                                data-fallback="{% static 'images/default-avatar.svg' %}"
+                                onerror="this.onerror=null; this.src=this.dataset.fallback;"
+                            >
                         {% else %}
-                            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="avatar-img">
+                            <img
+                                src="{% static 'images/default-avatar.svg' %}"
+                                alt="{{ user.username }}"
+                                class="avatar-img"
+                            >
                         {% endif %}
                     </button>
                     <div class="profile-dropdown" data-profile-menu>

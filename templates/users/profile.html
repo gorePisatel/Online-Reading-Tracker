@@ -1,15 +1,25 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Profile - BookLIB{% endblock %}
 
 {% block content %}
-{% load static %}
 <div class="profile-panel">
     <div class="profile-header">
         {% if user.avatar %}
-            <img src="{{ user.avatar.url }}" alt="{{ user.username }}" class="profile-avatar" onerror="this.onerror=null; this.src='{% static 'images/default-avatar.svg' %}';">
+            <img
+                src="{{ user.avatar.url }}"
+                alt="{{ user.username }}"
+                class="profile-avatar"
+                data-fallback="{% static 'images/default-avatar.svg' %}"
+                onerror="this.onerror=null; this.src=this.dataset.fallback;"
+            >
         {% else %}
-            <img src="{% static 'images/default-avatar.svg' %}" alt="{{ user.username }}" class="profile-avatar">
+            <img
+                src="{% static 'images/default-avatar.svg' %}"
+                alt="{{ user.username }}"
+                class="profile-avatar"
+            >
         {% endif %}
         <div>
             <h1>{{ user.username }}</h1>
