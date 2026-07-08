@@ -555,3 +555,76 @@ h2 {
         flex-basis: auto;
     }
 }
+
+
+.book-detail-page{
+
+    display:flex;
+
+    gap:50px;
+
+    align-items:flex-start;
+
+}
+
+.book-detail-left{
+
+    width:320px;
+
+}
+
+.book-detail-cover{
+
+    width:100%;
+
+    height:460px;
+
+    object-fit:cover;
+
+    border-radius:12px;
+
+    margin-bottom:20px;
+
+}
+
+.book-detail-right{
+
+    flex:1;
+
+}
+
+.book-detail-right h1{
+
+    font-size:42px;
+
+    margin-bottom:10px;
+
+}
+
+.book-detail-right h3{
+
+    color:#777;
+
+    margin-bottom:30px;
+
+    font-weight:500;
+
+}
+
+.book-description{
+
+    font-size:18px;
+
+    line-height:1.8;
+
+    color:#444;
+
+}
+
+.btn-full{
+
+    width:100%;
+
+    text-align:center;
+
+}

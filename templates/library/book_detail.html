@@ -3,34 +3,57 @@
 {% block title %}{{ book.title }}{% endblock %}
 
 {% block content %}
-<div class="book-detail">
-    <div class="book-detail-cover">
-        <div class="book-cover-placeholder book-cover-large"></div>
-        {% if user.is_authenticated %}
-            <form method="POST" action="{% url 'add_to_library' book.id %}">
-                {% csrf_token %}
-                <button type="submit" class="btn-accent btn-full book-detail-action">
-                    Add to My Library
-                </button>
-            </form>
-        {% endif %}
-    </div>
-    
-    <div class="book-detail-info">
-        <h1>{{ book.title }}</h1>
-        <h3>Author: {{ book.author_name }}</h3>
-        <p><strong>Genre:</strong> {{ book.genre.name }}</p>
-        <p><strong>Total Pages:</strong> {{ book.total_pages }}</p>
-        <hr>
-        <p>{{ book.description }}</p>
-        
-        <!-- Authorized Management Actions (CRUD Access Control) -->
-        {% if user == book.created_by %}
+
+<section class="content-box">
+
+    <div class="book-detail-page">
+
+        <div class="book-detail-left">
+
+            {% if book.cover %}
+                <img src="{{ book.cover.url }}"
+                     alt="{{ book.title }}"
+                     class="book-detail-cover">
+            {% else %}
+                <div class="book-cover-placeholder book-detail-cover"></div>
+            {% endif %}
+
+            <a href="#" class="btn-accent btn-full">
+                Читать
+            </a>
+
+        </div>
+
+        <div class="book-detail-right">
+
+            <h1>{{ book.title }}</h1>
+
+            <h3>{{ book.author_name }}</h3>
+
+            <p class="book-description">
+                {{ book.description }}
+            </p>
+
+            {% if user == book.created_by %}
             <div class="book-management-actions">
-                <a href="{% url 'book_update' book.id %}" class="btn-accent btn-success">Edit Book Details</a>
-                <a href="{% url 'book_delete' book.id %}" class="btn-accent btn-danger">Delete From System</a>
+
+                <a href="{% url 'book_update' book.id %}"
+                   class="btn-accent btn-success">
+                    Edit
+                </a>
+
+                <a href="{% url 'book_delete' book.id %}"
+                   class="btn-accent btn-danger">
+                    Delete
+                </a>
+
             </div>
-        {% endif %}
+            {% endif %}
+
+        </div>
+
     </div>
-</div>
+
+</section>
+
 {% endblock %}
