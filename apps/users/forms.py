@@ -1,16 +1,16 @@
-from django import forms
+from django.forms import (
+    ModelForm,
+    CharField,
+    PasswordInput,
+    ValidationError,
+)
 
 from .models import CustomUser, UserSettings
 
 
-class RegistrationForm(forms.ModelForm):
-    password1 = forms.CharField(
-        widget=forms.PasswordInput()
-    )
-
-    password2 = forms.CharField(
-        widget=forms.PasswordInput()
-    )
+class RegistrationForm(ModelForm):
+    password1 = CharField(widget=PasswordInput())
+    password2 = CharField(widget=PasswordInput())
 
     class Meta:
         model = CustomUser
@@ -28,7 +28,7 @@ class RegistrationForm(forms.ModelForm):
         password2 = cleaned_data.get("password2")
 
         if password1 != password2:
-            raise forms.ValidationError("Passwords do not match.")
+            raise ValidationError("Passwords do not match.")
 
         return cleaned_data
 
@@ -44,7 +44,7 @@ class RegistrationForm(forms.ModelForm):
         return user
 
 
-class UserSettingsForm(forms.ModelForm):
+class UserSettingsForm(ModelForm):
 
     class Meta:
         model = UserSettings
@@ -55,7 +55,7 @@ class UserSettingsForm(forms.ModelForm):
         ]
 
 
-class UserUpdateForm(forms.ModelForm):
+class UserUpdateForm(ModelForm):
 
     class Meta:
         model = CustomUser

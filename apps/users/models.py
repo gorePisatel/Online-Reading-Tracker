@@ -24,7 +24,7 @@ from django.utils import timezone
 
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email, password=None, **extra_fields):
+    def create_user(self, email, password=None, **extra_fields) -> CustomUser:
         
         if not email:
             raise ValueError('The Email field must be set')
@@ -33,9 +33,10 @@ class CustomUserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        
         return user
     
-    def create_superuser(self, email, password=None, **extra_fields):
+    def create_superuser(self, email, password=None, **extra_fields) -> CustomUser:
         extra_fields.setdefault('role', CustomUser.Roles.ADMIN)
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)

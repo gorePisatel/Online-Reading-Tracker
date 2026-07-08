@@ -16,33 +16,25 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
+
             messages.success(request, "Registration successful.")
             return redirect("profile")
 
         messages.error(request, "Please fix the errors below.")
     else:
         form = RegistrationForm()
+    
+    context = {"form": form}
 
-    return render(
-        request,
-        "users/register.html",
-        {
-            "form": form,
-        },
-    )
+    return render(request, "users/register.html", context)
 
 
 @login_required
 def profile_view(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
+    context = {"user_settings": user_settings}
 
-    return render(
-        request,
-        "users/profile.html",
-        {
-            "user_settings": user_settings,
-        },
-    )
+    return render(request, "users/profile.html", context)
 
 
 @login_required
@@ -50,19 +42,13 @@ def settings_view(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
-        user_form = UserUpdateForm(
-            request.POST,
-            request.FILES,
-            instance=request.user,
-        )
-        settings_form = UserSettingsForm(
-            request.POST,
-            instance=user_settings,
-        )
+        user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user,)
+        settings_form = UserSettingsForm(request.POST, instance=user_settings,)
 
         if user_form.is_valid() and settings_form.is_valid():
             user_form.save()
             settings_form.save()
+
             messages.success(request, "Profile updated successfully.")
             return redirect("profile")
 
@@ -70,15 +56,10 @@ def settings_view(request):
     else:
         user_form = UserUpdateForm(instance=request.user)
         settings_form = UserSettingsForm(instance=user_settings)
+    
+    context = {"user_form": user_form,"settings_form": settings_form}
 
-    return render(
-        request,
-        "users/settings.html",
-        {
-            "user_form": user_form,
-            "settings_form": settings_form,
-        },
-    )
+    return render(request, "users/settings.html", context)
 
 
 @login_required
@@ -93,4 +74,6 @@ def set_theme_view(request):
     user_settings.theme = theme
     user_settings.save(update_fields=["theme", "updated_at"])
 
-    return JsonResponse({"ok": True, "theme": theme})
+    context = {"ok": True, "theme": theme}
+
+    return JsonResponse(context)
