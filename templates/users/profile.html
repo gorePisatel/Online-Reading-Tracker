@@ -29,19 +29,18 @@
     <div class="profile-grid">
         <div>
             <span>Full name</span>
-            <strong>{% if user.first_name or user.last_name %}{{ user.first_name }} {{ user.last_name }}{% else %}Not set{% endif %}</strong>
+            <strong>
+                {% if user.first_name or user.last_name %}
+                    {{ user.first_name }} {{ user.last_name }}
+                {% else %}
+                    Not set
+                {% endif %}
+            </strong>
         </div>
+
         <div>
             <span>Theme</span>
             <strong>{{ user_settings.get_theme_display }}</strong>
-        </div>
-        <div>
-            <span>Private profile</span>
-            <strong>{{ user_settings.is_private|yesno:"Yes,No" }}</strong>
-        </div>
-        <div>
-            <span>Notifications</span>
-            <strong>{{ user_settings.notifications_enabled|yesno:"On,Off" }}</strong>
         </div>
     </div>
 

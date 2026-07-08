@@ -50,8 +50,6 @@ class UserSettingsForm(ModelForm):
         model = UserSettings
         fields = [
             "theme",
-            "is_private",
-            "notifications_enabled",
         ]
 
 
