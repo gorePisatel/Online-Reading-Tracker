@@ -1,9 +1,9 @@
-from django import forms
+from django.forms import ModelForm
 
 from .models import Book, Genre
 
 
-class GenreForm(forms.ModelForm):
+class GenreForm(ModelForm):
 
     class Meta:
         model = Genre
@@ -12,7 +12,7 @@ class GenreForm(forms.ModelForm):
         ]
 
 
-class BookForm(forms.ModelForm):
+class BookForm(ModelForm):
 
     class Meta:
         model = Book

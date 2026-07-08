@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from .models import Book, Genre
-from .forms import BookForm
+from apps.library.models import Book, Genre
+from apps.tracker.models import ReadingProgress
+from apps.library.forms import BookForm
 
 
 def book_list(request):
@@ -27,7 +28,6 @@ def book_list(request):
 
     user_progress = []
     if request.user.is_authenticated:
-        from apps.tracker.models import ReadingProgress
 
         user_progress = (
             ReadingProgress.objects
@@ -44,134 +44,70 @@ def book_list(request):
         "search_query": search or "",
     }
 
-    return render(
-        request,
-        "library/book_list.html",
-        context
-    )
+    return render(request, "library/book_list.html", context)
 
 
 def book_detail(request, pk):
     book = get_object_or_404(Book, id=pk)
+    context = {"book": book}
 
-    return render(
-        request,
-        "library/book_detail.html",
-        {
-            "book": book
-        }
-    )
+    return render(request, "library/book_detail.html", context)
 
 
 @login_required
 def book_create(request):
 
     if request.method == "POST":
-
-        form = BookForm(
-            request.POST,
-            request.FILES
-        )
+        form = BookForm(request.POST, request.FILES)
 
         if form.is_valid():
-
             book = form.save(commit=False)
-
             book.created_by = request.user
-
             book.save()
 
-            messages.success(
-                request,
-                "Book created successfully."
-            )
+            messages.success(request, "Book created successfully.")
 
-            return redirect(
-                "book_list"
-            )
+            return redirect("book_list")
 
     else:
         form = BookForm()
 
-    return render(
-        request,
-        "library/book_form.html",
-        {
-            "form": form
-        }
-    )
+    context = {"form": form}
+
+    return render(request, "library/book_form.html", context)
 
 
 @login_required
 def book_update(request, pk):
-
-    book = get_object_or_404(
-        Book,
-        id=pk
-    )
+    book = get_object_or_404(Book, id=pk)
 
     if request.method == "POST":
-
-        form = BookForm(
-            request.POST,
-            request.FILES,
-            instance=book
-        )
+        form = BookForm(request.POST, request.FILES, instance=book)
 
         if form.is_valid():
-
             form.save()
+            messages.success(request, "Book updated successfully.")
 
-            messages.success(
-                request,
-                "Book updated successfully."
-            )
-
-            return redirect(
-                "book_detail",
-                pk=book.id
-            )
+            return redirect("book_detail", pk=book.id)
 
     else:
+        form = BookForm(instance=book)
 
-        form = BookForm(
-            instance=book
-        )
+    context = {"book": book}
 
-    return render(
-        request,
-        "library/book_form.html",
-        {
-            "form": form
-        }
-    )
+    return render(request, "library/book_form.html", context)
 
 
 @login_required
 def book_delete(request, pk):
-
-    book = get_object_or_404(
-        Book,
-        id=pk
-    )
+    book = get_object_or_404(Book, id=pk)
 
     if request.method == "POST":
-
         book.delete()
+        messages.success(request, "Book deleted successfully.")
 
-        messages.success(
-            request,
-            "Book deleted successfully."
-        )
+        return redirect("book_list")
 
-        return redirect(
-            "book_list"
-        )
+    context = {"book": book}
 
-    return render(
-        request,
-        "library/book_confirm_delete.html",
-        {
-            "book": book
-        }
-    )
+    return render(request, "library/book_confirm_delete.html", context)

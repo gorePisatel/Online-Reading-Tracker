@@ -1,45 +1,35 @@
-from django.db import models
+from django.db.models import (
+    Model,
+    CASCADE,
+    CharField,
+    ForeignKey,
+    TextField,
+    PositiveIntegerField,
+    ImageField,
+    DateTimeField
+)
 from django.conf import settings
 
 
-class Genre(models.Model):
-    name = models.CharField(max_length=100)
+class Genre(Model):
+    name = CharField(max_length=100)
 
     def __str__(self):
         return self.name
 
 
-class Book(models.Model):
-    title = models.CharField(max_length=255)
-    author_name = models.CharField(max_length=255)
+class Book(Model):
+    title = CharField(max_length=255)
+    author_name = CharField(max_length=255)
+    genre = ForeignKey(Genre, on_delete=CASCADE)
+    description = TextField()
+    total_pages = PositiveIntegerField()
 
-    genre = models.ForeignKey(
-        Genre,
-        on_delete=models.CASCADE
-    )
+    cover = ImageField(upload_to="covers/", blank=True, null=True)
 
-    description = models.TextField()
-
-    total_pages = models.PositiveIntegerField()
-
-    cover = models.ImageField(
-        upload_to="covers/",
-        blank=True,
-        null=True
-    )
-
-    created_by = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE
-    )
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    created_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    created_at = DateTimeField(auto_now_add=True)
+    updated_at = DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title

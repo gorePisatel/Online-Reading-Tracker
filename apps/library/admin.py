@@ -1,19 +1,16 @@
-from django.contrib import admin
+from django.contrib.admin import register, ModelAdmin
 
 from .models import Genre, Book
 
 
-@admin.register(Genre)
-class GenreAdmin(admin.ModelAdmin):
+@register(Genre)
+class GenreAdmin(ModelAdmin):
 
-    list_display = (
-        "id",
-        "name",
-    )
+    list_display = ("id", "name",)
 
 
-@admin.register(Book)
-class BookAdmin(admin.ModelAdmin):
+@register(Book)
+class BookAdmin(ModelAdmin):
 
     list_display = (
         "title",
@@ -21,12 +18,5 @@ class BookAdmin(admin.ModelAdmin):
         "genre",
         "created_by",
     )
-
-    search_fields = (
-        "title",
-        "author_name",
-    )
-
-    list_filter = (
-        "genre",
-    )
+    search_fields = ("title", "author_name",)
+    list_filter = ("genre",)
