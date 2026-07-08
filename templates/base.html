@@ -10,7 +10,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
-<body data-theme="{{ current_theme|default:'light' }}">
+<body
+    data-theme="{{ current_theme|default:'light' }}"
+    data-theme-endpoint="{% if user.is_authenticated %}{% url 'set_theme' %}{% endif %}"
+    data-csrf-token="{{ csrf_token }}"
+>
     <header class="navbar">
         <div class="container nav-container">
             <a href="{% url 'book_list' %}" class="logo" aria-label="BookLIB home">
@@ -34,7 +38,6 @@
                                 alt="{{ user.username }}"
                                 class="avatar-img"
                                 data-fallback="{% static 'images/default-avatar.svg' %}"
-                                onerror="this.onerror=null; this.src=this.dataset.fallback;"
                             >
                         {% else %}
                             <img
@@ -86,12 +89,6 @@
         </div>
     </footer>
 
-    <script>
-        window.BookLIBTheme = {
-            endpoint: "{% if user.is_authenticated %}{% url 'set_theme' %}{% endif %}",
-            csrfToken: "{{ csrf_token }}",
-        };
-    </script>
     <script src="{% static 'js/theme.js' %}"></script>
 </body>
 </html>

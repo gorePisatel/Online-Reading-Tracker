@@ -8,13 +8,13 @@
 <div class="book-section">
     <div class="book-grid">
         {% for progress in library_items %}
-            <div class="book-card" style="position: relative;">
+            <div class="book-card book-card-progress">
                 <div class="book-cover-placeholder"></div>
                 <div class="book-info">
                     <h4>{{ progress.book.title }}</h4>
                     <p>Status: <strong>{{ progress.get_status_display }}</strong></p>
                     <p>Progress: {{ progress.current_page }} / {{ progress.book.total_pages }} pages</p>
-                    <a href="{% url 'update_progress' progress.id %}" class="btn-accent" style="display:block; text-align:center; margin-top:10px; font-size:12px; padding:4px;">
+                    <a href="{% url 'update_progress' progress.id %}" class="btn-accent btn-compact">
                         Update Progress
                     </a>
                 </div>

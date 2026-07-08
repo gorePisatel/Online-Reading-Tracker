@@ -12,7 +12,6 @@
                 alt="{{ user.username }}"
                 class="profile-avatar"
                 data-fallback="{% static 'images/default-avatar.svg' %}"
-                onerror="this.onerror=null; this.src=this.dataset.fallback;"
             >
         {% else %}
             <img
