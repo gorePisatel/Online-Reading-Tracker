@@ -8,7 +8,11 @@
         <p class="eyebrow">BookLIB catalog</p>
         <h1>All Books</h1>
     </div>
+
     <form method="GET" action="{% url 'book_list' %}" class="search-form">
+        {% if selected_genre_id %}
+            <input type="hidden" name="genre" value="{{ selected_genre_id }}">
+        {% endif %}
         <input type="text" name="search" value="{{ search_query }}" placeholder="Search by title...">
         <button type="submit" class="btn-accent">Search</button>
     </form>
@@ -18,16 +22,24 @@
     <div class="section-title">
         <h2>Genres</h2>
     </div>
+
     <div class="genre-list">
-        <a href="{% url 'book_list' %}" class="genre-chip {% if not selected_genre %}active{% endif %}">All Genres</a>
+        <a
+            href="{% url 'book_list' %}{% if search_query %}?search={{ search_query|urlencode }}{% endif %}"
+            class="genre-chip {% if not selected_genre_id %}active{% endif %}"
+        >
+            All Genres
+        </a>
+
         {% for genre in genres %}
-            <a href="{% url 'book_list' %}?genre={{ genre.id }}" class="genre-chip {% if selected_genre == genre.id|stringformat:'s' %}active{% endif %}">
+            <a
+                href="{% url 'book_list' %}?{% if search_query %}search={{ search_query|urlencode }}&{% endif %}genre={{ genre.id }}"
+                class="genre-chip {% if selected_genre_id == genre.id|stringformat:'s' %}active{% endif %}"
+            >
                 {{ genre.name }}
             </a>
         {% empty %}
-            <span class="genre-chip">Classics</span>
-            <span class="genre-chip">Fiction</span>
-            <span class="genre-chip">Science</span>
+            <span class="muted-text">No genres yet.</span>
         {% endfor %}
     </div>
 </section>
@@ -36,42 +48,72 @@
     <div class="section-title">
         <h2>Books</h2>
     </div>
+
     <div class="book-grid">
         {% for book in books %}
-            <a href="{% url 'book_detail' book.id %}" class="book-card">
-                {% if book.cover %}
-                    <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-cover">
-                {% else %}
-                    <div class="book-cover-placeholder"></div>
-                {% endif %}
+            <article class="book-card">
+                <button
+                    type="button"
+                    class="book-card-button"
+                    data-book-modal="book-modal-{{ book.id }}"
+                    aria-label="Open short description for {{ book.title }}"
+                >
+                    {% if book.cover %}
+                        <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-cover">
+                    {% else %}
+                        <div class="book-cover-placeholder"></div>
+                    {% endif %}
+                </button>
+
                 <div class="book-info">
-                    <h4>{{ book.title }}</h4>
+                    <button
+                        type="button"
+                        class="book-title-button"
+                        data-book-modal="book-modal-{{ book.id }}"
+                    >
+                        <h4>{{ book.title }}</h4>
+                    </button>
+
                     <p>{{ book.author_name }}</p>
-                    <p>{{ book.total_pages }} pages</p>
+                    <p>{{ book.genre.name }}</p>
                 </div>
-            </a>
+
+                <dialog class="book-modal" id="book-modal-{{ book.id }}">
+                    <div class="book-modal-content">
+                        <button type="button" class="book-modal-close" data-book-modal-close>
+                            ×
+                        </button>
+
+                        <div class="book-modal-layout">
+                            <div>
+                                {% if book.cover %}
+                                    <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-modal-cover">
+                                {% else %}
+                                    <div class="book-cover-placeholder book-modal-cover"></div>
+                                {% endif %}
+                            </div>
+
+                            <div>
+                                <p class="eyebrow">{{ book.genre.name }}</p>
+                                <h2>{{ book.title }}</h2>
+                                <h3>{{ book.author_name }}</h3>
+
+                                <p class="book-modal-description">
+                                    {{ book.description|default:"No description available yet."|truncatewords:45 }}
+                                </p>
+
+                                <p class="muted-text">{{ book.total_pages }} pages</p>
+
+                                <a href="{% url 'book_detail' book.id %}" class="btn-accent book-modal-link">
+                                    Open full page
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </dialog>
+            </article>
         {% empty %}
-            <div class="book-card">
-                <div class="book-cover-placeholder"></div>
-                <div class="book-info">
-                    <h4>The Great Gatsby</h4>
-                    <p>F. Scott Fitzgerald</p>
-                </div>
-            </div>
-            <div class="book-card">
-                <div class="book-cover-placeholder"></div>
-                <div class="book-info">
-                    <h4>180°C: Culinary Arts</h4>
-                    <p>Chef Master</p>
-                </div>
-            </div>
-            <div class="book-card">
-                <div class="book-cover-placeholder"></div>
-                <div class="book-info">
-                    <h4>To Kill a Mockingbird</h4>
-                    <p>Harper Lee</p>
-                </div>
-            </div>
+            <p class="muted-text">No books found.</p>
         {% endfor %}
     </div>
 </section>
@@ -81,6 +123,7 @@
         <div class="section-title">
             <h2>Continue Reading</h2>
         </div>
+
         <div class="book-grid">
             {% for item in user_progress %}
                 <a href="{% url 'book_detail' item.book.id %}" class="book-card">
@@ -89,6 +132,7 @@
                     {% else %}
                         <div class="book-cover-placeholder"></div>
                     {% endif %}
+
                     <div class="book-info">
                         <h4>{{ item.book.title }}</h4>
                         <p>Current Page: {{ item.current_page }}</p>
@@ -101,27 +145,34 @@
     </section>
 {% endif %}
 
-{% for genre_item, genre_books in books_by_genre %}
-    <section class="content-box">
-        <div class="section-title">
-            <h2>{{ genre_item.name }}</h2>
-        </div>
-        <div class="book-grid">
-            {% for book in genre_books %}
-                <a href="{% url 'book_detail' book.id %}" class="book-card">
-                    {% if book.cover %}
-                        <img src="{{ book.cover.url }}" alt="{{ book.title }}" class="book-cover">
-                    {% else %}
-                        <div class="book-cover-placeholder"></div>
-                    {% endif %}
-                    <div class="book-info">
-                        <h4>{{ book.title }}</h4>
-                        <p>{{ book.author_name }}</p>
-                    </div>
-                </a>
-            {% endfor %}
-        </div>
-    </section>
-{% endfor %}
+<script>
+    document.addEventListener("click", function (event) {
+        const openButton = event.target.closest("[data-book-modal]");
 
+        if (openButton) {
+            const modalId = openButton.getAttribute("data-book-modal");
+            const modal = document.getElementById(modalId);
+
+            if (modal) {
+                if (typeof modal.showModal === "function") {
+                    modal.showModal();
+                } else {
+                    modal.setAttribute("open", "open");
+                }
+            }
+        }
+
+        if (event.target.matches("[data-book-modal-close]")) {
+            const modal = event.target.closest("dialog");
+
+            if (modal) {
+                modal.close();
+            }
+        }
+
+        if (event.target.classList.contains("book-modal")) {
+            event.target.close();
+        }
+    });
+</script>
 {% endblock %}
