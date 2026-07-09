@@ -21,6 +21,7 @@ class BookForm(ModelForm):
             'author_name',
             'genre',
             'description',
+            'text',
             'total_pages',
             'cover',
         ]

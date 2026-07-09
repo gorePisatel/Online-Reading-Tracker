@@ -49,7 +49,7 @@ class UserSettingsForm(ModelForm):
     class Meta:
         model = UserSettings
         fields = [
-            "theme",
+            'theme',
         ]
 
 
@@ -58,9 +58,9 @@ class UserUpdateForm(ModelForm):
     class Meta:
         model = CustomUser
         fields = [
-            "username",
-            "first_name",
-            "last_name",
-            "avatar",
-            "bio",
+            'username',
+            'first_name',
+            'last_name',
+            'avatar',
+            'bio',
         ]

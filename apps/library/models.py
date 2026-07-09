@@ -23,6 +23,7 @@ class Book(Model):
     author_name = CharField(max_length=255)
     genre = ForeignKey(Genre, on_delete=CASCADE)
     description = TextField()
+    text = TextField(blank=True)
     total_pages = PositiveIntegerField()
 
     cover = ImageField(upload_to='covers/', blank=True, null=True)

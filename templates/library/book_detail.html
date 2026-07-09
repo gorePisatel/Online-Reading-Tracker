@@ -18,8 +18,8 @@
                 <div class="book-cover-placeholder book-detail-cover"></div>
             {% endif %}
 
-            <a href="#" class="btn-accent btn-full">
-                Читать
+            <a href="{% url 'book_reader' book.id %}" class="btn-accent btn-full">
+                Start reading
             </a>
 
         </div>

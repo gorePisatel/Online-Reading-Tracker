@@ -8,11 +8,11 @@ from apps.library.forms import BookForm
 
 
 def book_list(request):
-    books = Book.objects.select_related("genre").order_by("title")
-    genres = Genre.objects.all().order_by("name")
+    books = Book.objects.select_related('genre').order_by('title')
+    genres = Genre.objects.all().order_by('name')
 
-    search = request.GET.get("search", "").strip()
-    selected_genre_id = request.GET.get("genre", "").strip()
+    search = request.GET.get('search', '').strip()
+    selected_genre_id = request.GET.get('genre', '').strip()
 
     if search:
         books = books.filter(title__icontains=search)
@@ -20,24 +20,24 @@ def book_list(request):
     if selected_genre_id and selected_genre_id.isdigit():
         books = books.filter(genre_id=int(selected_genre_id))
     else:
-        selected_genre_id = ""
+        selected_genre_id = ''
 
     user_progress = []
 
     if request.user.is_authenticated:
         user_progress = (
             ReadingProgress.objects
-            .filter(user=request.user, status="reading")
-            .select_related("book", "book__genre")
-            .order_by("-updated_at")[:6]
+            .filter(user=request.user, status='reading')
+            .select_related('book', 'book__genre')
+            .order_by('-updated_at')[:6]
         )
 
     context = {
-        "books": books,
-        "genres": genres,
-        "user_progress": user_progress,
-        "selected_genre_id": selected_genre_id,
-        "search_query": search,
+        'books': books,
+        'genres': genres,
+        'user_progress': user_progress,
+        'selected_genre_id': selected_genre_id,
+        'search_query': search,
     }
 
     return render(request, 'library/book_list.html', context)
@@ -47,7 +47,7 @@ def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
     context = {
-        "book": book,
+        'book': book,
     }
 
     return render(request, 'library/book_detail.html', context)
@@ -55,7 +55,7 @@ def book_detail(request, pk):
 
 @login_required
 def book_create(request):
-    if request.method == "POST":
+    if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -63,15 +63,15 @@ def book_create(request):
             book.created_by = request.user
             book.save()
 
-            messages.success(request, "Book created successfully.")
+            messages.success(request, 'Book created successfully.')
 
-            return redirect("book_list")
+            return redirect('book_list')
 
     else:
         form = BookForm()
 
     context = {
-        "form": form,
+        'form': form,
     }
 
     return render(request, 'library/book_form.html', context)
@@ -86,16 +86,16 @@ def book_update(request, pk):
 
         if form.is_valid():
             form.save()
-            messages.success(request, "Book updated successfully.")
+            messages.success(request, 'Book updated successfully.')
 
-            return redirect("book_detail", pk=book.id)
+            return redirect('book_detail', pk=book.id)
 
     else:
         form = BookForm(instance=book)
 
     context = {
-        "book": book,
-        "form": form,
+        'book': book,
+        'form': form,
     }
 
     return render(request, 'library/book_form.html', context)
@@ -107,19 +107,20 @@ def book_delete(request, pk):
 
     if request.method == 'POST':
         book.delete()
-        messages.success(request, "Book deleted successfully.")
+        messages.success(request, 'Book deleted successfully.')
 
-        return redirect("book_list")
+        return redirect('book_list')
 
     context = {'book': book}
 
-    return render(request, "library/book_confirm_delete.html", context)
+    return render(request, 'library/book_confirm_delete.html', context)
+
 
 def book_reader(request, pk):
 
     book = get_object_or_404(Book, pk=pk)
 
-    text = book.text or ""
+    text = book.text.strip()
 
     WORDS_PER_PAGE = 140
 
@@ -128,17 +129,17 @@ def book_reader(request, pk):
     pages = []
 
     for i in range(0, len(words), WORDS_PER_PAGE):
-        page = " ".join(words[i:i + WORDS_PER_PAGE])
+        page = ' '.join(words[i:i + WORDS_PER_PAGE])
         pages.append(page)
 
     if not pages:
-        pages = ["This book has no text yet."]
+        pages = ['The text of the book has not been added yet.']
 
     return render(
         request,
-        "library/book_reader.html",
+        'library/book_reader.html',
         {
-            "book": book,
-            "pages": pages,
+            'book': book,
+            'pages': pages,
         },
     )
