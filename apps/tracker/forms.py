@@ -7,11 +7,11 @@ class ReadingProgressForm(forms.ModelForm):
 
     class Meta:
         model = ReadingProgress
-        fields = ["status", "current_page",]
+        fields = ['status', 'current_page',]
 
 
 class ReviewForm(forms.ModelForm):
 
     class Meta:
         model = Review
-        fields = ["rating", "text",]
+        fields = ['rating', 'text',]

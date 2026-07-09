@@ -5,6 +5,7 @@ venv/
 .env
 
 __pycache__/
+.DS_Store
 
 
 db.sqlite3
@@ -16,5 +17,7 @@ staticfiles/
 !README.md
 !TEST_DISTRIBUTION_1.md
 docs/some_documents
-.DS_Store
+
+# 
 *.jpeg
+*.jpg

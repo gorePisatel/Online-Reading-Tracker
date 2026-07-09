@@ -8,7 +8,7 @@ class GenreForm(ModelForm):
     class Meta:
         model = Genre
         fields = [
-            "name",
+            'name',
         ]
 
 
@@ -17,10 +17,10 @@ class BookForm(ModelForm):
     class Meta:
         model = Book
         fields = [
-            "title",
-            "author_name",
-            "genre",
-            "description",
-            "total_pages",
-            "cover",
+            'title',
+            'author_name',
+            'genre',
+            'description',
+            'total_pages',
+            'cover',
         ]

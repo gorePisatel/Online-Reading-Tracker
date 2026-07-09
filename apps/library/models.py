@@ -25,7 +25,7 @@ class Book(Model):
     description = TextField()
     total_pages = PositiveIntegerField()
 
-    cover = ImageField(upload_to="covers/", blank=True, null=True)
+    cover = ImageField(upload_to='covers/', blank=True, null=True)
 
     created_by = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
     created_at = DateTimeField(auto_now_add=True)

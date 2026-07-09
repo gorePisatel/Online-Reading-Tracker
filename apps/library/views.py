@@ -40,7 +40,7 @@ def book_list(request):
         "search_query": search,
     }
 
-    return render(request, "library/book_list.html", context)
+    return render(request, 'library/book_list.html', context)
 
 
 def book_detail(request, pk):
@@ -50,7 +50,7 @@ def book_detail(request, pk):
         "book": book,
     }
 
-    return render(request, "library/book_detail.html", context)
+    return render(request, 'library/book_detail.html', context)
 
 
 @login_required
@@ -74,14 +74,14 @@ def book_create(request):
         "form": form,
     }
 
-    return render(request, "library/book_form.html", context)
+    return render(request, 'library/book_form.html', context)
 
 
 @login_required
 def book_update(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
 
         if form.is_valid():
@@ -98,20 +98,20 @@ def book_update(request, pk):
         "form": form,
     }
 
-    return render(request, "library/book_form.html", context)
+    return render(request, 'library/book_form.html', context)
 
 
 @login_required
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
-    if request.method == "POST":
+    if request.method == 'POST':
         book.delete()
         messages.success(request, "Book deleted successfully.")
 
         return redirect("book_list")
 
-    context = {"book": book}
+    context = {'book': book}
 
     return render(request, "library/book_confirm_delete.html", context)
 
