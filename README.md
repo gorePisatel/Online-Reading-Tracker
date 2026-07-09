@@ -1,17 +1,17 @@
 # Online Reading Tracker
 
-Online Reading Tracker is a Django web application for tracking books, reading
-progress, reviews, and a personal reading library.
+Online Reading Tracker is a Django web application for browsing books, reading
+books in a simple reader, tracking personal reading progress, and leaving
+reviews.
 
 The project combines:
 
 - Django Templates for the frontend;
 - Django forms for user interaction;
 - Django REST Framework for API endpoints;
-- token-based authentication for API requests;
-- Postman collection for API testing.
-
----
+- token-based API authentication;
+- SQLite for local development;
+- Postman requests for API testing.
 
 ## Group Members
 
@@ -21,46 +21,25 @@ The project combines:
 | 2 | Askarova Akbota | Models, forms, Django views, admin panel |
 | 3 | Bisenev Ualikhan | DRF API, serializers, token auth, Postman |
 
----
+## Features
 
-## Project Idea
-
-Users can:
-
-- register, log in, and log out;
-- browse books;
-- search and filter books;
-- open book detail pages;
-- add books to their personal library;
-- update reading status and current page;
-- write reviews and ratings;
-- manage basic profile settings.
-
----
-
-## Current Status
-
-Already started:
-
-- base Django project;
-- custom `users` app;
-- custom user model draft;
-- user settings model draft;
-- Django settings structure;
-- README and planning documents.
-
-Still needed:
-
-- frontend templates;
-- forms;
-- book models;
-- reading progress model;
-- reviews/favorites;
-- DRF serializers and API views;
-- token authentication;
-- Postman collection.
-
----
+- Register, log in, and log out.
+- Browse all books on the home page.
+- Search books by title.
+- Filter books by genre.
+- Open a book detail page.
+- Read a book at `/<book_id>/read/`.
+- Calculate `total_pages` automatically from book text using the reader's
+  default page size.
+- Automatically add a book to the user's library when an authenticated user
+  opens the reader.
+- Save the user's last reader page and resume reading from that page.
+- Add a book to My Library from the book detail page.
+- Update reading status and current page.
+- Leave reviews and 1-5 ratings as an authenticated user.
+- View reviews and average rating as any visitor.
+- Manage user profile settings and theme.
+- Manage books, genres, users, progress, and reviews in Django Admin.
 
 ## Tech Stack
 
@@ -71,14 +50,62 @@ Still needed:
 - SQLite
 - HTML / CSS / JavaScript
 - django-cors-headers
+- WhiteNoise
 - Postman
-- Git / GitHub
 
----
+## Project Structure
+
+```text
+online_reading_tracker/
+├── apps/
+│   ├── library/
+│   │   ├── models.py          # Genre, Book
+│   │   ├── views.py           # catalog, detail, reader, book CRUD pages
+│   │   ├── serializers.py     # book and genre API serializers
+│   │   ├── api_views.py       # book and genre API views
+│   │   ├── urls.py            # frontend book routes
+│   │   └── api_urls.py        # API book routes
+│   ├── tracker/
+│   │   ├── models.py          # ReadingProgress, Review
+│   │   ├── views.py           # My Library, progress, reviews
+│   │   ├── serializers.py     # progress and review API serializers
+│   │   ├── api_views.py       # progress and review API views
+│   │   ├── urls.py            # frontend tracker routes
+│   │   └── api_urls.py        # API tracker routes
+│   └── users/
+│       ├── models.py          # CustomUser, UserSettings
+│       ├── views.py           # register, profile, settings, theme
+│       ├── serializers.py     # user API serializers
+│       ├── api_views.py       # token auth and profile API views
+│       ├── urls.py            # frontend auth/profile routes
+│       └── api_urls.py        # API user routes
+├── settings/
+│   ├── base.py                # installed apps, middleware, static/media, auth
+│   ├── urls.py                # root urls
+│   └── env/
+│       ├── dev.py             # development settings
+│       └── prod.py            # production settings
+├── templates/
+│   ├── base.html
+│   ├── library/               # catalog, detail, reader, book forms
+│   ├── tracker/               # my library, progress/review forms
+│   └── users/                 # login, register, profile, settings
+├── static/
+│   ├── css/style.css
+│   ├── js/theme.js
+│   └── images/
+├── media/                     # uploaded covers and avatars in development
+├── docs/
+│   ├── dbdiagram/             # exported ERD images/PDF
+│   └── some_documents/        # requirements and DBML source
+├── manage.py
+├── requirements.txt
+└── README.md
+```
 
 ## Installation
 
-Create and activate virtual environment:
+Create and activate a virtual environment:
 
 ```bash
 python -m venv .venv
@@ -91,12 +118,6 @@ Install dependencies:
 pip install -r requirements.txt
 ```
 
-If dependencies are missing:
-
-```bash
-pip install django python-decouple pillow djangorestframework django-cors-headers
-```
-
 Create `settings/.env`:
 
 ```env
@@ -104,24 +125,23 @@ PROJECT_SECRET_KEY=your-secret-key
 PROJECT_ENV_ID=dev
 ```
 
-Run migrations and start server:
+Run migrations:
 
 ```bash
-python manage.py makemigrations
 python manage.py migrate
+```
+
+Create an admin user:
+
+```bash
 python manage.py createsuperuser
+```
+
+Start the development server:
+
+```bash
 python manage.py runserver
 ```
-
-For production or hosting with `PROJECT_ENV_ID=prod`, collect static files before
-starting the app:
-
-```bash
-python manage.py collectstatic --noinput
-```
-
-Static CSS, JavaScript, and images are served through WhiteNoise, so make sure
-dependencies from `requirements.txt` are installed after pulling the repository.
 
 Open:
 
@@ -129,257 +149,192 @@ Open:
 http://127.0.0.1:8000/
 ```
 
----
-
-## Planned Apps
-
-Simple version:
-
-```text
-apps/
-├── users/
-├── library/
-└── tracker/
-```
-
-### `users`
-
-Handles:
-
-- registration;
-- login/logout;
-- user profile;
-- user settings;
-- roles: user, moderator, admin.
-
-### `library`
-
-Handles:
-
-- genres;
-- authors;
-- books;
-- book list/detail pages;
-- book CRUD.
-
-### `tracker`
-
-Handles:
-
-- reading progress;
-- reading status;
-- reviews;
-- favorites.
-
-Reviews and favorites can be placed here to keep the project smaller.
-
----
-
-## Models
-
-Planned models:
-
-| Model | Purpose |
-|-------|---------|
-| CustomUser | User profile and roles |
-| UserSettings | Theme, privacy, notifications |
-| Genre | Book genres |
-| Author | Book authors |
-| Book | Book information |
-| ReadingProgress | User reading status and current page |
-| Review | User review and rating |
-| Favorite | Saved books |
-
-Required relationships:
-
-```text
-Book -> Genre
-Book -> Author
-ReadingProgress -> User
-ReadingProgress -> Book
-Review -> User
-Review -> Book
-Favorite -> User
-Favorite -> Book
-```
-
-This satisfies the requirement for at least 4 models and at least 2
-`ForeignKey` relationships.
-
----
-
 ## Main Pages
 
 | Page | URL |
 |------|-----|
 | Home / book list | `/` |
-| Book detail | `/books/<id>/` |
-| Register | `/accounts/register/` |
-| Login | `/accounts/login/` |
-| Logout | `/accounts/logout/` |
-| My library | `/my-library/` |
-| Update progress | `/my-library/<id>/update/` |
-| Create book | `/books/create/` |
-| Update book | `/books/<id>/update/` |
-| Delete book | `/books/<id>/delete/` |
+| Book detail | `/<book_id>/` |
+| Book reader | `/<book_id>/read/` |
+| Create book | `/create/` |
+| Update book | `/<book_id>/update/` |
+| Delete book | `/<book_id>/delete/` |
+| Register | `/auth/register/` |
+| Login | `/auth/login/` |
+| Logout | `/auth/logout/` |
+| Profile | `/auth/profile/` |
+| Settings | `/auth/settings/` |
+| My Library | `/my-library/` |
+| Add to library | `/my-library/add/<book_id>/` |
+| Update progress | `/my-library/progress/<progress_id>/` |
+| Create review | `/my-library/review/<book_id>/` |
+| Admin | `/admin/` |
 
----
+## Models
+
+| Model | Purpose |
+|-------|---------|
+| CustomUser | User account, profile fields, and role |
+| UserSettings | Theme and user preferences |
+| Genre | Book genre |
+| Book | Book metadata, cover, description, and text |
+| ReadingProgress | User's saved book, status, and current page |
+| Review | User review text and rating |
+
+Important relationships:
+
+- `Book -> Genre`
+- `Book -> CustomUser` through `created_by`
+- `ReadingProgress -> CustomUser`
+- `ReadingProgress -> Book`
+- `Review -> CustomUser`
+- `Review -> Book`
 
 ## Forms
 
-The project should include at least 4 forms:
-
-- registration form;
-- login form;
-- book form;
-- reading progress form;
-- review form;
-- user settings form.
-
----
+- Registration form.
+- User profile/settings form.
+- Book form.
+- Reading progress form.
+- Review form.
+- Login form through Django auth views.
 
 ## API Endpoints
 
-### Auth
+Base URL:
+
+```text
+http://127.0.0.1:8000
+```
+
+### Users
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| POST | `/api/auth/login/` | Get token |
-| POST | `/api/auth/logout/` | Logout / delete token |
+| POST | `/api/users/register/` | Register user |
+| POST | `/api/users/login/` | Get token |
+| POST | `/api/users/logout/` | Delete token |
+| GET | `/api/users/me/` | Current user |
+| PATCH | `/api/users/me/update/` | Update profile |
 
-### Books
+### Books and Genres
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
 | GET | `/api/books/` | Book list |
-| GET | `/api/books/<id>/` | Book detail |
+| GET | `/api/books/?search=1984` | Search books |
+| GET | `/api/books/?genre=3` | Filter by genre |
+| GET | `/api/books/<book_id>/` | Book detail |
 | POST | `/api/books/create/` | Create book |
-| PATCH | `/api/books/<id>/update/` | Update book |
-| DELETE | `/api/books/<id>/delete/` | Delete book |
+| PATCH | `/api/books/<book_id>/update/` | Update book |
+| DELETE | `/api/books/<book_id>/delete/` | Delete book |
+| GET | `/api/books/genres/` | Genre list |
+| POST | `/api/books/genres/create/` | Create genre |
+
+Book API supports the `text` field, so book text can be created or updated
+through Postman/API as well as through Django Admin.
+The `total_pages` field is read-only and is recalculated automatically from
+the book text.
 
 ### Progress and Reviews
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/progress/` | Current user's progress |
-| POST | `/api/progress/create/` | Add book to library |
-| PATCH | `/api/progress/<id>/update/` | Update progress |
-| GET | `/api/reviews/` | Review list |
-| POST | `/api/reviews/create/` | Create review |
+| GET | `/api/tracker/progress/` | Current user's progress |
+| POST | `/api/tracker/progress/create/` | Add book to library |
+| PATCH | `/api/tracker/progress/<progress_id>/update/` | Update progress |
+| GET | `/api/tracker/reviews/` | Review list |
+| POST | `/api/tracker/reviews/create/` | Create review |
 
----
-
-## DRF Requirements
-
-The API part must include:
-
-- at least 2 `serializers.Serializer`;
-- at least 2 `serializers.ModelSerializer`;
-- at least 2 function-based DRF views;
-- at least 2 class-based views using `APIView`;
-- token login endpoint;
-- token logout endpoint;
-- protected create/update/delete endpoints;
-- objects linked to `request.user`.
-
----
-
-## Token Authentication
-
-Basic required version:
-
-```python
-INSTALLED_APPS = [
-    'rest_framework',
-    'rest_framework.authtoken',
-]
-```
-
-Request header:
+Protected endpoints require:
 
 ```http
 Authorization: Token your_token_here
 ```
 
-Optional improvement: SimpleJWT can be used instead of DRF Token Auth if allowed.
+## Postman
 
----
+Export the tested Postman collection as `Collection v2.1` and keep it in the
+repository, for example:
 
-## CORS
-
-Use `django-cors-headers`:
-
-```python
-INSTALLED_APPS = [
-    'corsheaders',
-]
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-]
+```text
+postman/online-reading-tracker.postman_collection.json
+postman/online-reading-tracker.postman_environment.json
 ```
 
----
+The environment can contain:
 
-## Final Requirements Checklist
+```text
+base_url = http://127.0.0.1:8000
+token = your_token_here
+```
+
+## Requirements Checklist
 
 ### Frontend
 
-- [ ] Django Templates
-- [ ] At least 4 forms
-- [ ] At least 4 user actions
-- [ ] Basic CSS
-- [ ] At least 3 named URL paths
-- [ ] Navigation between pages
-- [ ] `{% for %}` loops
-- [ ] `{% if %}` conditions
-- [ ] Registration
-- [ ] Login
-- [ ] Logout
-- [ ] Custom context processor or template tag
-- [ ] Error/success messages
+- [x] Django Templates.
+- [x] At least 4 forms.
+- [x] At least 4 user actions.
+- [x] Basic CSS.
+- [x] At least 3 named URL paths.
+- [x] Navigation between pages.
+- [x] `{% for %}` loops.
+- [x] `{% if %}` conditions.
+- [x] Registration.
+- [x] Login.
+- [x] Logout.
+- [x] Custom context processor.
+- [x] Error/success messages.
 
 ### Backend
 
-- [ ] At least 4 models
-- [ ] At least 2 `ForeignKey` relationships
-- [ ] Admin customization
-- [ ] Full CRUD for at least one model
-- [ ] Created objects linked to `request.user`
+- [x] At least 4 models.
+- [x] At least 2 `ForeignKey` relationships.
+- [x] Admin customization.
+- [x] Full CRUD for Book through API and admin.
+- [x] Created books, progress, and reviews linked to `request.user`.
 
 ### API
 
-- [ ] DRF configured
-- [ ] Token authentication
-- [ ] CORS configured
-- [ ] 2+ `serializers.Serializer`
-- [ ] 2+ `serializers.ModelSerializer`
-- [ ] 2+ DRF function-based views
-- [ ] 2+ `APIView` class-based views
-- [ ] Login/logout API endpoints
-- [ ] Protected CRUD endpoints
-- [ ] Postman collection
+- [x] DRF configured.
+- [x] Token authentication.
+- [x] CORS configured.
+- [x] 2+ `serializers.Serializer`.
+- [x] 2+ `serializers.ModelSerializer`.
+- [x] 2+ DRF function-based views.
+- [x] 2+ `APIView` class-based views.
+- [x] Login/logout API endpoints.
+- [x] Protected create/update/delete endpoints.
+- [ ] Postman collection exported and committed.
 
-### Defense
+## What Can Be Added Next
 
-- [ ] GitHub repository
-- [ ] Commit history
-- [ ] README.md
-- [ ] Postman collection
-- [ ] Presentation, maximum 4 pages
-- [ ] Live demo
-- [ ] All members can explain frontend and backend
+These are optional improvements. The current project already covers the main
+course requirements, but these would make the demo stronger:
 
----
+- Export and commit the Postman collection and environment.
+- Add automated tests for auth, book API, reader progress, and review creation.
+- Add pagination to the book catalog and review list.
+- Add review editing/deleting for the review owner.
+- Add "remove from My Library" functionality.
+- Add API endpoints for reading progress from the reader, if it needs to be
+  demonstrated in Postman.
+- Add a favicon to avoid `/favicon.ico` 404 logs during local demos.
+- Add production deployment notes if the project will be hosted.
 
-## Notes
+## Demo Flow
 
-Detailed task distribution can be kept in `TASK_DISTRIBUTION.md`.
-
-Detailed experimental code variants can stay in separate markdown files, for
-example:
-
-- `apps_users_simplified.md`
-- `apps_users_serializers_1.md`
-- `apps_users_views_1.md`
-- `apps_users_urls_1.md`
+1. Register or log in.
+2. Browse `/`, search and filter books.
+3. Open a book detail page.
+4. Show the Description and Reviews tabs.
+5. Add a review and show the updated rating.
+6. Click `Start reading`.
+7. Move several pages forward in the reader.
+8. Open `/my-library/` and show that the book was saved automatically with the
+   saved page progress.
+9. Click `Continue Reading` and show that the reader resumes from the saved
+   page.
+10. Update reading progress manually.
+11. Show API login and a protected API request in Postman.
