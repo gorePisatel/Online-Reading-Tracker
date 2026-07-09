@@ -1,4 +1,4 @@
-from django.contrib.admin import display, register, ModelAdmin
+from django.contrib.admin import ModelAdmin, display, register
 
 from .models import Genre, Book
 

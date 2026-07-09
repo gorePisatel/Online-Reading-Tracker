@@ -1,11 +1,11 @@
 from django.db.models import (
+    CASCADE,
     CharField,
-    PositiveIntegerField,
     DateTimeField,
     ForeignKey,
-    TextField,
     Model,
-    CASCADE,
+    PositiveIntegerField,
+    TextField,
 )
 from django.conf import settings
 
@@ -21,9 +21,13 @@ class ReadingProgress(Model):
         ('dropped', 'Dropped'),
     ]
 
-    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE,)
-    book = ForeignKey(Book, on_delete=CASCADE,)
-    status = CharField(max_length=20, choices=STATUS_CHOICES, default='want_to_read',)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    book = ForeignKey(Book, on_delete=CASCADE)
+    status = CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default='want_to_read',
+    )
     current_page = PositiveIntegerField(default=0)
 
     created_at = DateTimeField(auto_now_add=True)
@@ -44,8 +48,8 @@ class ReadingProgress(Model):
 
 class Review(Model):
 
-    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE,)
-    book = ForeignKey(Book, on_delete=CASCADE,)
+    user = ForeignKey(settings.AUTH_USER_MODEL, on_delete=CASCADE)
+    book = ForeignKey(Book, on_delete=CASCADE)
     rating = PositiveIntegerField()
     text = TextField()
 

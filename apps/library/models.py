@@ -1,12 +1,12 @@
 from django.db.models import (
-    Model,
     CASCADE,
     CharField,
+    DateTimeField,
     ForeignKey,
-    TextField,
-    PositiveIntegerField,
     ImageField,
-    DateTimeField
+    Model,
+    PositiveIntegerField,
+    TextField,
 )
 from django.conf import settings
 
@@ -41,7 +41,10 @@ class Book(Model):
         if not word_count:
             return 1
 
-        return max(1, (word_count + WORDS_PER_READER_PAGE - 1) // WORDS_PER_READER_PAGE)
+        return max(
+            1,
+            (word_count + WORDS_PER_READER_PAGE - 1) // WORDS_PER_READER_PAGE,
+        )
 
     def save(self, *args, **kwargs):
         self.total_pages = self.calculate_total_pages()

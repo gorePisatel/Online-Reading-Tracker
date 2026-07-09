@@ -1,0 +1,255 @@
+:root {
+    --reader-font: 24px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    overflow: hidden;
+    background: linear-gradient(135deg, #ece6dc, #d8cdbd);
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.reader-header {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 40px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(15px);
+}
+
+.back-button {
+    color: #333;
+    font-size: 18px;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.reader-title {
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.reader-tools {
+    display: flex;
+    gap: 10px;
+}
+
+.tool-btn {
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.tool-btn:hover {
+    background: #222;
+    color: #fff;
+}
+
+.reader {
+    height: calc(100vh - 72px);
+    display: grid;
+    grid-template-columns: 90px 1fr 90px;
+}
+
+.reader-left,
+.reader-right {
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.reader-left:hover {
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.05), transparent);
+}
+
+.reader-right:hover {
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.05), transparent);
+}
+
+.book {
+    position: relative;
+    width: min(1300px, 92vw);
+    height: 90vh;
+    margin: auto;
+    overflow: hidden;
+    padding: 80px 90px;
+    border-radius: 24px;
+    background: #fffdfa;
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.18),
+        inset 0 0 1px rgba(0, 0, 0, 0.2);
+}
+
+.book-name {
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 52px;
+    font-weight: 900;
+}
+
+.book-author {
+    margin-bottom: 45px;
+    color: #888;
+    text-align: center;
+    font-size: 20px;
+}
+
+.page {
+    height: calc(100% - 160px);
+    display: none;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.page.active {
+    display: block;
+    animation: fade 0.3s;
+}
+
+.page-content {
+    font-family: "Merriweather", serif;
+    font-size: var(--reader-font);
+    line-height: 2.1;
+    text-align: justify;
+}
+
+.page-content p {
+    margin-bottom: 18px;
+}
+
+.page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.page::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: #b99d76;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    color: #888;
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+.arrow {
+    position: fixed;
+    top: 50%;
+    width: 70px;
+    height: 70px;
+    transform: translateY(-50%);
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    font-size: 30px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.arrow:hover {
+    transform: translateY(-50%) scale(1.08);
+    background: #222;
+    color: #fff;
+}
+
+#prev {
+    left: 25px;
+}
+
+#next {
+    right: 25px;
+}
+
+#progress-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #ece7df;
+}
+
+#progress-bar {
+    width: 0;
+    height: 100%;
+    background: linear-gradient(90deg, #6d4c41, #b08968);
+}
+
+@keyframes fade {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 760px) {
+    .reader-header {
+        padding: 0 16px;
+    }
+
+    .reader-title {
+        max-width: 45vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .reader {
+        grid-template-columns: 24px 1fr 24px;
+    }
+
+    .book {
+        width: 100%;
+        height: calc(100vh - 92px);
+        padding: 34px 22px 54px;
+        border-radius: 12px;
+    }
+
+    .book-name {
+        font-size: 30px;
+    }
+
+    .book-author {
+        margin-bottom: 24px;
+    }
+
+    .page {
+        height: calc(100% - 118px);
+    }
+
+    .arrow {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+}

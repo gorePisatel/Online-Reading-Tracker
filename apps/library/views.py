@@ -7,11 +7,10 @@ from django.db.models import Avg, Count
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 
+from apps.library.forms import BookForm
 from apps.library.models import Book, Genre, WORDS_PER_READER_PAGE
 from apps.tracker.forms import ReviewForm
-from apps.tracker.models import ReadingProgress
-from apps.tracker.models import Review
-from apps.library.forms import BookForm
+from apps.tracker.models import ReadingProgress, Review
 
 
 def book_list(request):
@@ -151,12 +150,11 @@ def book_delete(request, pk):
 
 
 def book_reader(request, pk):
-
     book = get_object_or_404(Book, pk=pk)
     user_progress = None
 
     if request.user.is_authenticated:
-        user_progress, created = ReadingProgress.objects.get_or_create(
+        user_progress, _ = ReadingProgress.objects.get_or_create(
             user=request.user,
             book=book,
             defaults={
@@ -180,7 +178,9 @@ def book_reader(request, pk):
             changed_fields.append('current_page')
 
         if changed_fields:
-            user_progress.save(update_fields=[*set(changed_fields), 'updated_at'])
+            user_progress.save(
+                update_fields=[*set(changed_fields), 'updated_at'],
+            )
 
     text = book.text.strip()
 
@@ -201,7 +201,11 @@ def book_reader(request, pk):
         {
             'book': book,
             'pages': pages,
-            'start_page_index': (user_progress.current_page - 1) if user_progress else 0,
+            'start_page_index': (
+                user_progress.current_page - 1
+                if user_progress
+                else 0
+            ),
         },
     )
 
@@ -219,7 +223,10 @@ def book_reader_progress(request, pk):
     try:
         current_page = int(payload.get('current_page'))
     except (TypeError, ValueError):
-        return JsonResponse({'ok': False, 'error': 'Invalid current page.'}, status=400)
+        return JsonResponse(
+            {'ok': False, 'error': 'Invalid current page.'},
+            status=400,
+        )
 
     current_page = max(1, min(current_page, book.total_pages))
     progress, _ = ReadingProgress.objects.get_or_create(

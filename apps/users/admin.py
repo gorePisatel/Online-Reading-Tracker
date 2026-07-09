@@ -1,5 +1,5 @@
+from django.contrib.admin import ModelAdmin, register
 from django.contrib.auth.admin import UserAdmin
-from django.contrib.admin import register, ModelAdmin
 
 from apps.users.models import CustomUser, UserSettings
 
@@ -16,13 +16,13 @@ class CustomUserAdmin(UserAdmin):
         'is_staff',
         'is_active',
     )
-    search_fields = ('email', 'username','first_name', 'last_name')
+    search_fields = ('email', 'username', 'first_name', 'last_name')
     list_filter = ('role', 'is_staff', 'is_active')
     ordering = ('email',)
 
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
-        (('Personal info'), {
+        ('Personal info', {
             'fields': (
                 'username',
                 'first_name',
@@ -31,8 +31,8 @@ class CustomUserAdmin(UserAdmin):
                 'bio',
             ),
         }),
-        (('Role'), {'fields': ('role',)}),
-        (('Permissions'), {
+        ('Role', {'fields': ('role',)}),
+        ('Permissions', {
             'fields': (
                 'is_active',
                 'is_staff',
@@ -41,7 +41,7 @@ class CustomUserAdmin(UserAdmin):
                 'user_permissions',
             ),
         }),
-        (('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        ('Important dates', {'fields': ('last_login', 'date_joined')}),
     )
 
     add_fieldsets = (
@@ -58,6 +58,7 @@ class CustomUserAdmin(UserAdmin):
             ),
         }),
     )
+
 
 @register(UserSettings)
 class UserSettingsAdmin(ModelAdmin):

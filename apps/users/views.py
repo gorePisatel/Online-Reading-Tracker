@@ -2,8 +2,8 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from django.views.decorators.http import require_POST
 from django.shortcuts import redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms import RegistrationForm, UserSettingsForm, UserUpdateForm
 from .models import UserSettings
@@ -23,7 +23,7 @@ def register_view(request):
         messages.error(request, 'Please fix the errors below.')
     else:
         form = RegistrationForm()
-    
+
     context = {'form': form}
 
     return render(request, 'users/register.html', context)
@@ -42,8 +42,15 @@ def settings_view(request):
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
 
     if request.method == 'POST':
-        user_form = UserUpdateForm(request.POST, request.FILES, instance=request.user,)
-        settings_form = UserSettingsForm(request.POST, instance=user_settings,)
+        user_form = UserUpdateForm(
+            request.POST,
+            request.FILES,
+            instance=request.user,
+        )
+        settings_form = UserSettingsForm(
+            request.POST,
+            instance=user_settings,
+        )
 
         if user_form.is_valid() and settings_form.is_valid():
             user_form.save()
@@ -56,8 +63,11 @@ def settings_view(request):
     else:
         user_form = UserUpdateForm(instance=request.user)
         settings_form = UserSettingsForm(instance=user_settings)
-    
-    context = {'user_form': user_form,'settings_form': settings_form}
+
+    context = {
+        'user_form': user_form,
+        'settings_form': settings_form,
+    }
 
     return render(request, 'users/settings.html', context)
 
@@ -68,7 +78,10 @@ def set_theme_view(request):
     theme = request.POST.get('theme')
 
     if theme not in dict(UserSettings.ThemeChoices.choices):
-        return JsonResponse({'ok': False, 'error': 'Invalid theme.'}, status=400)
+        return JsonResponse(
+            {'ok': False, 'error': 'Invalid theme.'},
+            status=400,
+        )
 
     user_settings, _ = UserSettings.objects.get_or_create(user=request.user)
     user_settings.theme = theme
