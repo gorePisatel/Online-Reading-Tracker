@@ -112,5 +112,6 @@ STORAGES = {
 
 LOGIN_REDIRECT_URL = 'book_list'
 LOGOUT_REDIRECT_URL = 'book_list'
+LOGIN_URL = 'login'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
