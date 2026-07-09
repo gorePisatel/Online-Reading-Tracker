@@ -40,6 +40,8 @@ The project combines:
 - View reviews and average rating as any visitor.
 - Manage user profile settings and theme.
 - Manage books, genres, users, progress, and reviews in Django Admin.
+- Limit catalog create/update/delete actions to staff, admin, or moderator
+  users.
 
 ## Tech Stack
 
@@ -235,6 +237,8 @@ Book API supports the `text` field, so book text can be created or updated
 through Postman/API as well as through Django Admin.
 The `total_pages` field is read-only and is recalculated automatically from
 the book text.
+Book and genre create/update/delete endpoints require a staff, admin, or
+moderator token.
 
 ### Progress and Reviews
 

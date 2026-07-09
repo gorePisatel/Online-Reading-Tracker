@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, BasePermission
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -11,6 +11,22 @@ from apps.library.serializers import (
     BookSerializer,
     GenreSerializer,
 )
+
+
+def can_manage_books(user):
+    return (
+        user.is_authenticated
+        and (
+            user.is_staff
+            or getattr(user, 'is_admin', False)
+            or getattr(user, 'is_moderator', False)
+        )
+    )
+
+
+class CanManageBooks(BasePermission):
+    def has_permission(self, request, view):
+        return can_manage_books(request.user)
 
 
 @api_view(['GET'])
@@ -50,7 +66,7 @@ class BookDetailAPIView(APIView):
 
 
 class BookCreateAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [CanManageBooks]
 
     def post(self, request):
         serializer = BookSerializer(
@@ -69,10 +85,10 @@ class BookCreateAPIView(APIView):
 
 
 class BookUpdateDeleteAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [CanManageBooks]
 
     def patch(self, request, pk):
-        book = get_object_or_404(Book, pk=pk, created_by=request.user)
+        book = get_object_or_404(Book, pk=pk)
         serializer = BookSerializer(
             book,
             data=request.data,
@@ -87,7 +103,7 @@ class BookUpdateDeleteAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        book = get_object_or_404(Book, pk=pk, created_by=request.user)
+        book = get_object_or_404(Book, pk=pk)
         book.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -101,7 +117,7 @@ def api_genre_list(request):
 
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([CanManageBooks])
 def api_genre_create(request):
     serializer = GenreSerializer(data=request.data)
 

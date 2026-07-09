@@ -13,6 +13,17 @@ from apps.tracker.forms import ReviewForm
 from apps.tracker.models import ReadingProgress, Review
 
 
+def can_manage_books(user):
+    return (
+        user.is_authenticated
+        and (
+            user.is_staff
+            or getattr(user, 'is_admin', False)
+            or getattr(user, 'is_moderator', False)
+        )
+    )
+
+
 def book_list(request):
     books = Book.objects.select_related('genre').order_by('title')
     genres = Genre.objects.all().order_by('name')
@@ -81,6 +92,7 @@ def book_detail(request, pk):
         'rating_rounded': rating_rounded,
         'rating_stars': range(1, 6),
         'user_progress': user_progress,
+        'can_manage_books': can_manage_books(request.user),
     }
 
     return render(request, 'library/book_detail.html', context)
@@ -88,6 +100,10 @@ def book_detail(request, pk):
 
 @login_required
 def book_create(request):
+    if not can_manage_books(request.user):
+        messages.error(request, 'Only staff members can create catalog books.')
+        return redirect('book_list')
+
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES)
 
@@ -114,6 +130,10 @@ def book_create(request):
 def book_update(request, pk):
     book = get_object_or_404(Book, pk=pk)
 
+    if not can_manage_books(request.user):
+        messages.error(request, 'Only staff members can edit catalog books.')
+        return redirect('book_detail', pk=book.id)
+
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
 
@@ -137,6 +157,10 @@ def book_update(request, pk):
 @login_required
 def book_delete(request, pk):
     book = get_object_or_404(Book, pk=pk)
+
+    if not can_manage_books(request.user):
+        messages.error(request, 'Only staff members can delete catalog books.')
+        return redirect('book_detail', pk=book.id)
 
     if request.method == 'POST':
         book.delete()

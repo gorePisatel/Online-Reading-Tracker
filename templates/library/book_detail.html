@@ -115,20 +115,22 @@
                 </section>
             </div>
 
-            {% if user == book.created_by %}
-            <div class="book-management-actions">
+            {% if can_manage_books %}
+                <div class="book-management-actions">
+                    <a
+                        href="{% url 'book_update' book.id %}"
+                        class="btn-accent btn-success"
+                    >
+                        Edit
+                    </a>
 
-                <a href="{% url 'book_update' book.id %}"
-                   class="btn-accent btn-success">
-                    Edit
-                </a>
-
-                <a href="{% url 'book_delete' book.id %}"
-                   class="btn-accent btn-danger">
-                    Delete
-                </a>
-
-            </div>
+                    <a
+                        href="{% url 'book_delete' book.id %}"
+                        class="btn-accent btn-danger"
+                    >
+                        Delete
+                    </a>
+                </div>
             {% endif %}
 
         </div>
