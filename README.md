@@ -254,8 +254,8 @@ Authorization: Token your_token_here
 
 ## Postman
 
-Export the tested Postman collection as `Collection v2.1` and keep it in the
-repository, for example:
+The tested Postman collection and local environment are included in the
+repository:
 
 ```text
 postman/online-reading-tracker.postman_collection.json
@@ -306,14 +306,13 @@ token = your_token_here
 - [x] 2+ `APIView` class-based views.
 - [x] Login/logout API endpoints.
 - [x] Protected create/update/delete endpoints.
-- [ ] Postman collection exported and committed.
+- [x] Postman collection exported and committed.
 
 ## What Can Be Added Next
 
 These are optional improvements. The current project already covers the main
 course requirements, but these would make the demo stronger:
 
-- Export and commit the Postman collection and environment.
 - Add automated tests for auth, book API, reader progress, and review creation.
 - Add pagination to the book catalog and review list.
 - Add review editing/deleting for the review owner.
