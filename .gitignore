@@ -13,6 +13,7 @@ staticfiles/
 
 
 *.pdf
+!docs/project_summary.pdf
 *.md
 !README.md
 !TEST_DISTRIBUTION_1.md

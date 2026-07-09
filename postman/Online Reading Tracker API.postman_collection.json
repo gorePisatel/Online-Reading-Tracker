@@ -38,7 +38,46 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"postman_user@example.com\",\n  \"username\": \"postman_user\",\n  \"password\": \"password123\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"User\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/register/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "register",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"email\": \"postman_user@example.com\",\n  \"username\": \"postman_user\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"User\",\n  \"avatar\": null,\n  \"bio\": \"Updated from Postman\",\n  \"role\": \"user\",\n  \"theme\": \"light\",\n  \"is_private\": false,\n  \"notifications_enabled\": true\n}"
+            }
+          ]
         },
         {
           "name": "Login",
@@ -81,7 +120,46 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"email\": \"postman_user@example.com\",\n  \"password\": \"password123\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/login/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "login",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"token\": \"example_token_value\",\n  \"user\": {\n    \"id\": 1,\n    \"email\": \"postman_user@example.com\",\n    \"username\": \"postman_user\",\n    \"first_name\": \"Postman\",\n    \"last_name\": \"User\",\n    \"avatar\": null,\n    \"bio\": \"Updated from Postman\",\n    \"role\": \"user\",\n    \"theme\": \"light\",\n    \"is_private\": false,\n    \"notifications_enabled\": true\n  }\n}"
+            }
+          ]
         },
         {
           "name": "Current User",
@@ -106,7 +184,42 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/me/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "me",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"email\": \"postman_user@example.com\",\n  \"username\": \"postman_user\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"User\",\n  \"avatar\": null,\n  \"bio\": \"Updated from Postman\",\n  \"role\": \"user\",\n  \"theme\": \"light\",\n  \"is_private\": false,\n  \"notifications_enabled\": true\n}"
+            }
+          ]
         },
         {
           "name": "Update Profile",
@@ -140,7 +253,51 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"first_name\": \"Updated\",\n  \"last_name\": \"Reader\",\n  \"bio\": \"Updated from Postman\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/users/me/update/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "me",
+                    "update",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"email\": \"postman_user@example.com\",\n  \"username\": \"postman_user\",\n  \"first_name\": \"Postman\",\n  \"last_name\": \"User\",\n  \"avatar\": null,\n  \"bio\": \"Updated from Postman\",\n  \"role\": \"user\",\n  \"theme\": \"light\",\n  \"is_private\": false,\n  \"notifications_enabled\": true\n}"
+            }
+          ]
         },
         {
           "name": "Logout",
@@ -165,7 +322,42 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/users/logout/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "users",
+                    "logout",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"detail\": \"Logged out successfully.\"\n}"
+            }
+          ]
         }
       ]
     },
@@ -189,7 +381,36 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/books/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 3,\n    \"title\": \"1984\",\n    \"author_name\": \"George Orwell\",\n    \"genre\": 3,\n    \"genre_name\": \"Dystopian\",\n    \"description\": \"A classic dystopian novel.\",\n    \"text\": \"Example book text.\",\n    \"total_pages\": 1,\n    \"cover\": null,\n    \"created_by\": 1,\n    \"created_by_username\": \"admin\",\n    \"created_at\": \"2026-07-09T05:00:00Z\",\n    \"updated_at\": \"2026-07-09T05:00:00Z\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Search Books",
@@ -214,7 +435,42 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/books/?search=1984",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "search",
+                      "value": "1984"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 3,\n    \"title\": \"1984\",\n    \"author_name\": \"George Orwell\",\n    \"genre\": 3,\n    \"genre_name\": \"Dystopian\",\n    \"description\": \"A classic dystopian novel.\",\n    \"text\": \"Example book text.\",\n    \"total_pages\": 1,\n    \"cover\": null,\n    \"created_by\": 1,\n    \"created_by_username\": \"admin\",\n    \"created_at\": \"2026-07-09T05:00:00Z\",\n    \"updated_at\": \"2026-07-09T05:00:00Z\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Filter Books by Genre",
@@ -239,7 +495,42 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/books/?genre={{genre_id}}",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    ""
+                  ],
+                  "query": [
+                    {
+                      "key": "genre",
+                      "value": "{{genre_id}}"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 3,\n    \"title\": \"1984\",\n    \"author_name\": \"George Orwell\",\n    \"genre\": 3,\n    \"genre_name\": \"Dystopian\",\n    \"description\": \"A classic dystopian novel.\",\n    \"text\": \"Example book text.\",\n    \"total_pages\": 1,\n    \"cover\": null,\n    \"created_by\": 1,\n    \"created_by_username\": \"admin\",\n    \"created_at\": \"2026-07-09T05:00:00Z\",\n    \"updated_at\": \"2026-07-09T05:00:00Z\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Book Detail",
@@ -259,7 +550,37 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/books/{{book_id}}/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "{{book_id}}",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 3,\n  \"title\": \"1984\",\n  \"author_name\": \"George Orwell\",\n  \"genre\": 3,\n  \"genre_name\": \"Dystopian\",\n  \"description\": \"A classic dystopian novel.\",\n  \"text\": \"Example book text.\",\n  \"total_pages\": 1,\n  \"cover\": null,\n  \"created_by\": 1,\n  \"created_by_username\": \"admin\",\n  \"created_at\": \"2026-07-09T05:00:00Z\",\n  \"updated_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         },
         {
           "name": "Genre List",
@@ -279,7 +600,37 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/books/genres/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "genres",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 3,\n    \"name\": \"Dystopian\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Create Genre",
@@ -327,7 +678,51 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Postman Genre\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/books/genres/create/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "genres",
+                    "create",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 4,\n  \"name\": \"Postman Genre\"\n}"
+            }
+          ]
         },
         {
           "name": "Create Book",
@@ -374,7 +769,50 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"title\": \"Postman Test Book\",\n  \"author_name\": \"API Tester\",\n  \"genre\": {{genre_id}},\n  \"description\": \"Created from Postman collection.\",\n  \"text\": \"This is a short test book created from Postman. It is used to demonstrate authenticated book creation through the API.\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/books/create/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "create",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8,\n  \"title\": \"Postman Test Book\",\n  \"author_name\": \"API Tester\",\n  \"genre\": 3,\n  \"genre_name\": \"Postman Genre\",\n  \"description\": \"Created from Postman collection.\",\n  \"text\": \"This is a short test book created from Postman.\",\n  \"total_pages\": 1,\n  \"cover\": null,\n  \"created_by\": 1,\n  \"created_by_username\": \"postman_user\",\n  \"created_at\": \"2026-07-09T05:00:00Z\",\n  \"updated_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         },
         {
           "name": "Update Created Book",
@@ -408,7 +846,51 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"description\": \"Updated from Postman.\",\n  \"text\": \"Updated text from Postman. The total page count is recalculated automatically from this text.\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/books/{{created_book_id}}/update/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "{{created_book_id}}",
+                    "update",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 8,\n  \"title\": \"Postman Test Book\",\n  \"author_name\": \"API Tester\",\n  \"genre\": 3,\n  \"genre_name\": \"Postman Genre\",\n  \"description\": \"Updated from Postman.\",\n  \"text\": \"Updated text from Postman. The total page count is recalculated automatically from this text.\",\n  \"total_pages\": 1,\n  \"cover\": null,\n  \"created_by\": 1,\n  \"created_by_username\": \"postman_user\",\n  \"created_at\": \"2026-07-09T05:00:00Z\",\n  \"updated_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         },
         {
           "name": "Delete Created Book",
@@ -434,7 +916,38 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "204 No Content",
+              "originalRequest": {
+                "method": "DELETE",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/books/{{created_book_id}}/delete/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "books",
+                    "{{created_book_id}}",
+                    "delete",
+                    ""
+                  ]
+                }
+              },
+              "status": "No Content",
+              "code": 204,
+              "_postman_previewlanguage": "json",
+              "header": [],
+              "body": ""
+            }
+          ]
         }
       ]
     },
@@ -464,7 +977,42 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  }
+                ],
+                "url": {
+                  "raw": "{{base_url}}/api/tracker/progress/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tracker",
+                    "progress",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"book\": 3,\n    \"book_title\": \"1984\",\n    \"status\": \"reading\",\n    \"current_page\": 1,\n    \"progress_percent\": 100,\n    \"created_at\": \"2026-07-09T05:00:00Z\",\n    \"updated_at\": \"2026-07-09T05:00:00Z\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Create Progress",
@@ -512,7 +1060,51 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"book\": {{book_id}},\n  \"status\": \"reading\",\n  \"current_page\": 1\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tracker/progress/create/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tracker",
+                    "progress",
+                    "create",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"book\": 3,\n  \"book_title\": \"1984\",\n  \"status\": \"reading\",\n  \"current_page\": 1,\n  \"progress_percent\": 100,\n  \"created_at\": \"2026-07-09T05:00:00Z\",\n  \"updated_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         },
         {
           "name": "Update Progress",
@@ -547,7 +1139,52 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "PATCH",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"status\": \"reading\",\n  \"current_page\": 2\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tracker/progress/{{progress_id}}/update/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tracker",
+                    "progress",
+                    "{{progress_id}}",
+                    "update",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"book\": 3,\n  \"book_title\": \"1984\",\n  \"status\": \"reading\",\n  \"current_page\": 2,\n  \"progress_percent\": 100,\n  \"created_at\": \"2026-07-09T05:00:00Z\",\n  \"updated_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         },
         {
           "name": "Review List",
@@ -567,7 +1204,37 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/tracker/reviews/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tracker",
+                    "reviews",
+                    ""
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  {\n    \"id\": 1,\n    \"book\": 3,\n    \"book_title\": \"1984\",\n    \"username\": \"postman_user\",\n    \"rating\": 5,\n    \"text\": \"Great book tested through Postman.\",\n    \"created_at\": \"2026-07-09T05:00:00Z\"\n  }\n]"
+            }
+          ]
         },
         {
           "name": "Create Review",
@@ -601,7 +1268,51 @@
               ]
             }
           },
-          "response": []
+          "response": [
+            {
+              "name": "201 Created",
+              "originalRequest": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "Authorization",
+                    "value": "Token {{token}}"
+                  },
+                  {
+                    "key": "Content-Type",
+                    "value": "application/json"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"book\": {{book_id}},\n  \"rating\": 5,\n  \"text\": \"Great book tested through Postman.\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/tracker/reviews/create/",
+                  "host": [
+                    "{{base_url}}"
+                  ],
+                  "path": [
+                    "api",
+                    "tracker",
+                    "reviews",
+                    "create",
+                    ""
+                  ]
+                }
+              },
+              "status": "Created",
+              "code": 201,
+              "_postman_previewlanguage": "json",
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"id\": 1,\n  \"book\": 3,\n  \"book_title\": \"1984\",\n  \"username\": \"postman_user\",\n  \"rating\": 5,\n  \"text\": \"Great book tested through Postman.\",\n  \"created_at\": \"2026-07-09T05:00:00Z\"\n}"
+            }
+          ]
         }
       ]
     }
