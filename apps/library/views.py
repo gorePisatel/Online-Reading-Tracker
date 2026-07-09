@@ -8,56 +8,54 @@ from apps.library.forms import BookForm
 
 
 def book_list(request):
-    books = Book.objects.select_related('genre').all()
-    genres = Genre.objects.all()
+    books = Book.objects.select_related("genre").order_by("title")
+    genres = Genre.objects.all().order_by("name")
 
-    search = request.GET.get('search')
-    genre = request.GET.get('genre')
+    search = request.GET.get("search", "").strip()
+    selected_genre_id = request.GET.get("genre", "").strip()
 
     if search:
         books = books.filter(title__icontains=search)
 
-    if genre:
-        books = books.filter(genre_id=genre)
-
-    books_by_genre = []
-    for genre_item in genres:
-        genre_books = books.filter(genre=genre_item)
-        if genre_books.exists():
-            books_by_genre.append((genre_item, genre_books[:6]))
+    if selected_genre_id and selected_genre_id.isdigit():
+        books = books.filter(genre_id=int(selected_genre_id))
+    else:
+        selected_genre_id = ""
 
     user_progress = []
-    if request.user.is_authenticated:
 
+    if request.user.is_authenticated:
         user_progress = (
             ReadingProgress.objects
-            .filter(user=request.user, status='reading')
-            .select_related('book', 'book__genre')[:6]
+            .filter(user=request.user, status="reading")
+            .select_related("book", "book__genre")
+            .order_by("-updated_at")[:6]
         )
 
     context = {
-        'books': books,
-        'genres': genres,
-        'books_by_genre': books_by_genre,
-        'user_progress': user_progress,
-        'selected_genre': genre,
-        'search_query': search or '',
+        "books": books,
+        "genres": genres,
+        "user_progress": user_progress,
+        "selected_genre_id": selected_genre_id,
+        "search_query": search,
     }
 
     return render(request, 'library/book_list.html', context)
 
 
 def book_detail(request, pk):
-    book = get_object_or_404(Book, id=pk)
-    context = {'book': book}
+    book = get_object_or_404(Book, pk=pk)
+
+    context = {
+        "book": book,
+    }
 
     return render(request, 'library/book_detail.html', context)
 
 
 @login_required
 def book_create(request):
-
-    if request.method == 'POST':
+    if request.method == "POST":
         form = BookForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -65,48 +63,82 @@ def book_create(request):
             book.created_by = request.user
             book.save()
 
-            messages.success(request, 'Book created successfully.')
-            return redirect('book_list')
+            messages.success(request, "Book created successfully.")
+
+            return redirect("book_list")
 
     else:
         form = BookForm()
 
-    context = {'form': form}
+    context = {
+        "form": form,
+    }
 
     return render(request, 'library/book_form.html', context)
 
 
 @login_required
 def book_update(request, pk):
-    book = get_object_or_404(Book, id=pk)
+    book = get_object_or_404(Book, pk=pk)
 
     if request.method == 'POST':
         form = BookForm(request.POST, request.FILES, instance=book)
 
         if form.is_valid():
             form.save()
+            messages.success(request, "Book updated successfully.")
 
-            messages.success(request, 'Book updated successfully.')
-            return redirect('book_detail', pk=book.id)
+            return redirect("book_detail", pk=book.id)
 
     else:
         form = BookForm(instance=book)
 
-    context = {'book': book}
+    context = {
+        "book": book,
+        "form": form,
+    }
 
     return render(request, 'library/book_form.html', context)
 
 
 @login_required
 def book_delete(request, pk):
-    book = get_object_or_404(Book, id=pk)
+    book = get_object_or_404(Book, pk=pk)
 
     if request.method == 'POST':
         book.delete()
+        messages.success(request, "Book deleted successfully.")
 
-        messages.success(request, 'Book deleted successfully.')
-        return redirect('book_list')
+        return redirect("book_list")
 
     context = {'book': book}
 
-    return render(request, 'library/book_confirm_delete.html', context)
+    return render(request, "library/book_confirm_delete.html", context)
+
+def book_reader(request, pk):
+
+    book = get_object_or_404(Book, pk=pk)
+
+    text = book.text or ""
+
+    WORDS_PER_PAGE = 140
+
+    words = text.split()
+
+    pages = []
+
+    for i in range(0, len(words), WORDS_PER_PAGE):
+        page = " ".join(words[i:i + WORDS_PER_PAGE])
+        pages.append(page)
+
+    if not pages:
+        pages = ["This book has no text yet."]
+
+    return render(
+        request,
+        "library/book_reader.html",
+        {
+            "book": book,
+            "pages": pages,
+        },
+    )

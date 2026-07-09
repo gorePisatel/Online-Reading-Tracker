@@ -554,4 +554,203 @@ h2 {
         max-width: 250px;
         flex-basis: auto;
     }
+
+    .reader{
+    display:flex;
+    height:100vh;
+}
+
+#left-zone,
+#right-zone{
+    width:20%;
+    cursor:pointer;
+}
+
+.reader-content{
+    width:60%;
+    padding:50px;
+    overflow:hidden;
+}
+
+#book-text{
+    height:80vh;
+    overflow-y:auto;
+    font-size:22px;
+    line-height:2;
+    text-align:justify;
+    scroll-behavior:smooth;
+}
+
+.reader h1{
+    text-align:center;
+}
+
+.reader h4{
+    text-align:center;
+    color:gray;
+    margin-bottom:20px;
+}
+}
+
+.page.active{
+
+display:block;
+
+animation:pageTurn .35s ease;
+
+}
+
+@keyframes pageTurn{
+
+0%{
+
+opacity:0;
+
+transform:translateX(35px);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+.page-content{
+    font-family:"Merriweather",serif;
+    font-size:24px;
+    line-height:2;
+    text-align:justify;
+    color:#2b2b2b;
+}
+
+.page-content p{
+    margin-bottom:30px;
+    text-indent:40px;
+}
+
+.page-content p:first-child{
+    text-indent:0;
+}
+
+.page-content{
+    font-family:"Merriweather", serif;
+    font-size:24px;
+    line-height:2;
+    text-align:justify;
+    color:#2b2b2b;
+}
+
+.page-content p{
+    margin-bottom:28px;
+    text-indent:40px;
+}
+
+.page-content p:first-child{
+    text-indent:0;
+
+.book-card-button,
+.book-title-button {
+    width: 100%;
+    display: block;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.book-card-button:hover .book-cover,
+.book-card-button:hover .book-cover-placeholder,
+.book-title-button:hover h4 {
+    opacity: 0.85;
+    text-decoration: underline;
+}
+
+.book-title-button h4 {
+    margin: 0 0 4px;
+}
+
+.book-modal {
+    width: min(720px, calc(100% - 32px));
+    border: 0;
+    border-radius: 16px;
+    padding: 0;
+    background: var(--surface-color);
+    color: var(--text-color);
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
+}
+
+.book-modal::backdrop {
+    background: rgba(0, 0, 0, 0.45);
+}
+
+.book-modal-content {
+    position: relative;
+    padding: 28px;
+}
+
+.book-modal-layout {
+    display: grid;
+    grid-template-columns: 160px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+.book-modal-cover {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;
+    border-radius: var(--border-radius);
+}
+
+.book-modal h2 {
+    margin-bottom: 8px;
+}
+
+.book-modal h3 {
+    margin: 0 0 16px;
+    color: var(--muted-color);
+    font-size: 16px;
+}
+
+.book-modal-description {
+    margin: 0 0 14px;
+    line-height: 1.65;
+    color: var(--text-color);
+}
+
+.book-modal-link {
+    margin-top: 18px;
+}
+
+.book-modal-close {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--border-color);
+    border-radius: 50%;
+    background: var(--bg-color);
+    color: var(--text-color);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+@media (max-width: 720px) {
+    .book-modal-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .book-modal-cover {
+        max-width: 180px;
+    }
 }
