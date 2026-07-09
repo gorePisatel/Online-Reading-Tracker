@@ -31,6 +31,7 @@ class BookSerializer(ModelSerializer):
             'genre',
             'genre_name',
             'description',
+            'text',
             'total_pages',
             'cover',
             'created_by',
@@ -42,6 +43,7 @@ class BookSerializer(ModelSerializer):
             'id',
             'created_by',
             'created_by_username',
+            'total_pages',
             'created_at',
             'updated_at',
         ]

@@ -31,6 +31,8 @@ class ReadingProgress(Model):
 
     @property
     def progress_percent(self):
+        if not self.book.total_pages:
+            return 0
         return int((self.current_page / self.book.total_pages) * 100)
 
     class Meta:

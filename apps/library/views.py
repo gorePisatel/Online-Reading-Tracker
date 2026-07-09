@@ -1,9 +1,16 @@
+import json
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Avg, Count
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
-from apps.library.models import Book, Genre
+from apps.library.models import Book, Genre, WORDS_PER_READER_PAGE
+from apps.tracker.forms import ReviewForm
 from apps.tracker.models import ReadingProgress
+from apps.tracker.models import Review
 from apps.library.forms import BookForm
 
 
@@ -45,9 +52,36 @@ def book_list(request):
 
 def book_detail(request, pk):
     book = get_object_or_404(Book, pk=pk)
+    reviews = (
+        Review.objects
+        .filter(book=book)
+        .select_related('user')
+        .order_by('-created_at')
+    )
+    rating_stats = reviews.aggregate(
+        average_rating=Avg('rating'),
+        review_count=Count('id'),
+    )
+    average_rating = rating_stats['average_rating']
+    rating_value = round(average_rating, 1) if average_rating else None
+    rating_rounded = int(average_rating + 0.5) if average_rating else 0
+    user_progress = None
+
+    if request.user.is_authenticated:
+        user_progress = ReadingProgress.objects.filter(
+            user=request.user,
+            book=book,
+        ).first()
 
     context = {
         'book': book,
+        'reviews': reviews,
+        'review_form': ReviewForm(),
+        'review_count': rating_stats['review_count'],
+        'rating_value': rating_value,
+        'rating_rounded': rating_rounded,
+        'rating_stars': range(1, 6),
+        'user_progress': user_progress,
     }
 
     return render(request, 'library/book_detail.html', context)
@@ -119,17 +153,43 @@ def book_delete(request, pk):
 def book_reader(request, pk):
 
     book = get_object_or_404(Book, pk=pk)
+    user_progress = None
+
+    if request.user.is_authenticated:
+        user_progress, created = ReadingProgress.objects.get_or_create(
+            user=request.user,
+            book=book,
+            defaults={
+                'status': 'reading',
+                'current_page': 1,
+            },
+        )
+
+        changed_fields = []
+
+        if user_progress.status == 'want_to_read':
+            user_progress.status = 'reading'
+            changed_fields.append('status')
+
+        if user_progress.current_page < 1:
+            user_progress.current_page = 1
+            changed_fields.append('current_page')
+
+        if user_progress.current_page > book.total_pages:
+            user_progress.current_page = book.total_pages
+            changed_fields.append('current_page')
+
+        if changed_fields:
+            user_progress.save(update_fields=[*set(changed_fields), 'updated_at'])
 
     text = book.text.strip()
-
-    WORDS_PER_PAGE = 140
 
     words = text.split()
 
     pages = []
 
-    for i in range(0, len(words), WORDS_PER_PAGE):
-        page = ' '.join(words[i:i + WORDS_PER_PAGE])
+    for i in range(0, len(words), WORDS_PER_READER_PAGE):
+        page = ' '.join(words[i:i + WORDS_PER_READER_PAGE])
         pages.append(page)
 
     if not pages:
@@ -141,5 +201,41 @@ def book_reader(request, pk):
         {
             'book': book,
             'pages': pages,
+            'start_page_index': (user_progress.current_page - 1) if user_progress else 0,
         },
     )
+
+
+@login_required
+@require_POST
+def book_reader_progress(request, pk):
+    book = get_object_or_404(Book, pk=pk)
+
+    try:
+        payload = json.loads(request.body.decode('utf-8') or '{}')
+    except json.JSONDecodeError:
+        return JsonResponse({'ok': False, 'error': 'Invalid JSON.'}, status=400)
+
+    try:
+        current_page = int(payload.get('current_page'))
+    except (TypeError, ValueError):
+        return JsonResponse({'ok': False, 'error': 'Invalid current page.'}, status=400)
+
+    current_page = max(1, min(current_page, book.total_pages))
+    progress, _ = ReadingProgress.objects.get_or_create(
+        user=request.user,
+        book=book,
+        defaults={'status': 'reading'},
+    )
+    progress.current_page = current_page
+
+    if progress.status == 'want_to_read':
+        progress.status = 'reading'
+
+    progress.save(update_fields=['current_page', 'status', 'updated_at'])
+
+    return JsonResponse({
+        'ok': True,
+        'current_page': progress.current_page,
+        'total_pages': book.total_pages,
+    })

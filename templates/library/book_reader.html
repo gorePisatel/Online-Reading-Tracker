@@ -4,6 +4,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="csrf-token" content="{{ csrf_token }}">
 
 <title>{{ book.title }}</title>
 
@@ -420,7 +421,7 @@ transform:translateX(0);
 
 {% for page in pages %}
 
-<div class="page {% if forloop.first %}active{% endif %}">
+<div class="page {% if forloop.counter0 == start_page_index %}active{% endif %}">
 
     <div class="page-content">
 
@@ -456,13 +457,71 @@ transform:translateX(0);
 
 <script>
 
-let currentPage = 0;
+let currentPage = Number("{{ start_page_index|default:0 }}");
 
 const pages = document.querySelectorAll(".page");
 
 const progressBar = document.getElementById("progress-bar");
 
+const saveProgressUrl = "{% url 'book_reader_progress' book.id %}";
+
+const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+const canSaveProgress = {% if user.is_authenticated %}true{% else %}false{% endif %};
+
+let saveTimer = null;
+
+function saveProgress(){
+
+    if(!canSaveProgress){
+
+        return;
+
+    }
+
+    window.clearTimeout(saveTimer);
+
+    saveTimer = window.setTimeout(function(){
+
+        fetch(saveProgressUrl,{
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json",
+
+                "X-CSRFToken":csrfToken
+
+            },
+
+            body:JSON.stringify({
+
+                current_page:currentPage+1
+
+            })
+
+        }).catch(function(){
+
+            return null;
+
+        });
+
+    },250);
+
+}
+
 function showPage(index){
+
+    if(!pages.length){
+
+        return;
+
+    }
+
+    index=Math.max(0,Math.min(index,pages.length-1));
+
+    currentPage=index;
 
     pages.forEach(page=>{
 
@@ -476,17 +535,17 @@ function showPage(index){
 
     progressBar.style.width=percent+"%";
 
+    saveProgress();
+
 }
 
-showPage(0);
+showPage(currentPage);
 
 function nextPage(){
 
     if(currentPage<pages.length-1){
 
-        currentPage++;
-
-        showPage(currentPage);
+        showPage(currentPage+1);
 
     }
 
@@ -496,9 +555,7 @@ function prevPage(){
 
     if(currentPage>0){
 
-        currentPage--;
-
-        showPage(currentPage);
+        showPage(currentPage-1);
 
     }
 

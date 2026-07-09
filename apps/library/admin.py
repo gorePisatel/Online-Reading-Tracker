@@ -16,12 +16,14 @@ class BookAdmin(ModelAdmin):
         'title',
         'author_name',
         'genre',
+        'total_pages',
         'created_by',
         'cover_status',
         'text_status',
     )
     search_fields = ('title', 'author_name',)
     list_filter = ('genre',)
+    readonly_fields = ('total_pages',)
 
     @display(description='Cover')
     def cover_status(self, obj):

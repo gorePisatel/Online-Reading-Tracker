@@ -22,6 +22,5 @@ class BookForm(ModelForm):
             'genre',
             'description',
             'text',
-            'total_pages',
             'cover',
         ]
