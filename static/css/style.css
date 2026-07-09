@@ -554,81 +554,104 @@ h2 {
         max-width: 250px;
         flex-basis: auto;
     }
-}
 
-
-.book-detail-page{
-
+    .reader{
     display:flex;
-
-    gap:50px;
-
-    align-items:flex-start;
-
+    height:100vh;
 }
 
-.book-detail-left{
-
-    width:320px;
-
+#left-zone,
+#right-zone{
+    width:20%;
+    cursor:pointer;
 }
 
-.book-detail-cover{
-
-    width:100%;
-
-    height:460px;
-
-    object-fit:cover;
-
-    border-radius:12px;
-
-    margin-bottom:20px;
-
+.reader-content{
+    width:60%;
+    padding:50px;
+    overflow:hidden;
 }
 
-.book-detail-right{
-
-    flex:1;
-
+#book-text{
+    height:80vh;
+    overflow-y:auto;
+    font-size:22px;
+    line-height:2;
+    text-align:justify;
+    scroll-behavior:smooth;
 }
 
-.book-detail-right h1{
-
-    font-size:42px;
-
-    margin-bottom:10px;
-
-}
-
-.book-detail-right h3{
-
-    color:#777;
-
-    margin-bottom:30px;
-
-    font-weight:500;
-
-}
-
-.book-description{
-
-    font-size:18px;
-
-    line-height:1.8;
-
-    color:#444;
-
-}
-
-.btn-full{
-
-    width:100%;
-
+.reader h1{
     text-align:center;
+}
+
+.reader h4{
+    text-align:center;
+    color:gray;
+    margin-bottom:20px;
+}
+}
+
+.page.active{
+
+display:block;
+
+animation:pageTurn .35s ease;
 
 }
 
+@keyframes pageTurn{
+
+0%{
+
+opacity:0;
+
+transform:translateX(35px);
+
+}
+
+100%{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+.page-content{
+    font-family:"Merriweather",serif;
+    font-size:24px;
+    line-height:2;
+    text-align:justify;
+    color:#2b2b2b;
+}
+
+.page-content p{
+    margin-bottom:30px;
+    text-indent:40px;
+}
+
+.page-content p:first-child{
+    text-indent:0;
+}
+
+.page-content{
+    font-family:"Merriweather", serif;
+    font-size:24px;
+    line-height:2;
+    text-align:justify;
+    color:#2b2b2b;
+}
+
+.page-content p{
+    margin-bottom:28px;
+    text-indent:40px;
+}
+
+.page-content p:first-child{
+    text-indent:0;
 
 .book-card-button,
 .book-title-button {

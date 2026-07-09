@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>{{ book.title }}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+
+:root{
+    --reader-font:24px;
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+}
+
+body{
+
+    font-family:"Nunito Sans",sans-serif;
+
+    background:linear-gradient(135deg,#ece6dc,#d8cdbd);
+
+    overflow:hidden;
+
+}
+
+/* ================= HEADER ================= */
+
+.reader-header{
+
+    height:72px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 40px;
+
+    background:rgba(255,255,255,.95);
+
+    backdrop-filter:blur(15px);
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+}
+
+.back-button{
+
+    text-decoration:none;
+
+    color:#333;
+
+    font-weight:800;
+
+    font-size:18px;
+
+}
+
+.reader-title{
+
+    font-size:24px;
+
+    font-weight:900;
+
+}
+
+.reader-tools{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+.tool-btn{
+
+    width:44px;
+
+    height:44px;
+
+    border:none;
+
+    border-radius:10px;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+    transition:.2s;
+
+}
+
+.tool-btn:hover{
+
+    background:#222;
+
+    color:white;
+
+}
+
+/* ================= READER ================= */
+
+.reader{
+
+    display:grid;
+
+    grid-template-columns:90px 1fr 90px;
+
+    height:calc(100vh - 72px);
+
+}
+
+.reader-left,
+.reader-right{
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.reader-left:hover{
+
+    background:linear-gradient(to right,rgba(0,0,0,.05),transparent);
+
+}
+
+.reader-right:hover{
+
+    background:linear-gradient(to left,rgba(0,0,0,.05),transparent);
+
+}
+
+/* ================= BOOK ================= */
+
+.book{
+
+    width:min(1300px,92vw);
+
+    height:90vh;
+
+    margin:auto;
+
+    background:#fffdfa;
+
+    border-radius:24px;
+
+    box-shadow:
+        0 25px 70px rgba(0,0,0,.18),
+        inset 0 0 1px rgba(0,0,0,.2);
+
+    padding:80px 90px;
+
+    position:relative;
+
+    overflow:hidden;
+
+}
+
+.book-name{
+
+    text-align:center;
+
+    font-size:52px;
+
+    font-weight:900;
+
+    margin-bottom:12px;
+
+}
+
+.book-author{
+
+    text-align:center;
+
+    color:#888;
+
+    font-size:20px;
+
+    margin-bottom:45px;
+
+}
+
+.page{
+
+    display:none;
+
+    height:calc(100% - 160px);
+
+    overflow-y:auto;
+
+    padding-right:10px;
+
+}
+
+.page.active{
+
+    display:block;
+
+    animation:fade .3s;
+
+}
+
+.page-content{
+
+    font-family:"Merriweather",serif;
+
+    font-size:var(--reader-font);
+
+    line-height:2.1;
+
+    text-align:justify;
+
+}
+
+.page-content p{
+
+    margin-bottom:18px;
+
+}
+
+.page::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.page::-webkit-scrollbar-thumb{
+
+    background:#b99d76;
+
+    border-radius:20px;
+
+}
+
+.page-number{
+
+    position:absolute;
+
+    bottom:30px;
+
+    left:50%;
+
+    transform:translateX(-50%);
+
+    color:#888;
+
+    font-size:15px;
+
+    letter-spacing:2px;
+
+}
+
+.arrow{
+
+    position:fixed;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:70px;
+
+    height:70px;
+
+    border:none;
+
+    border-radius:50%;
+
+    background:white;
+
+    cursor:pointer;
+
+    font-size:30px;
+
+    box-shadow:0 10px 25px rgba(0,0,0,.15);
+
+    transition:.2s;
+
+}
+
+.arrow:hover{
+
+    transform:translateY(-50%) scale(1.08);
+
+    background:#222;
+
+    color:white;
+
+}
+
+#prev{
+
+    left:25px;
+
+}
+
+#next{
+
+    right:25px;
+
+}
+
+#progress-container{
+
+    position:absolute;
+
+    left:0;
+
+    bottom:0;
+
+    width:100%;
+
+    height:6px;
+
+    background:#ece7df;
+
+}
+
+#progress-bar{
+
+    width:0;
+
+    height:100%;
+
+    background:linear-gradient(90deg,#6d4c41,#b08968);
+
+}
+
+@keyframes fade{
+
+from{
+
+opacity:0;
+
+transform:translateX(20px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateX(0);
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header class="reader-header">
+
+<a href="{% url 'book_list' %}" class="back-button">
+
+← Library
+
+</a>
+
+<div class="reader-title">
+
+{{ book.title }}
+
+</div>
+
+<div class="reader-tools">
+
+<button id="decrease-font" class="tool-btn">-</button>
+
+<button id="increase-font" class="tool-btn">+</button>
+
+</div>
+
+</header>
+
+<div class="reader">
+
+<div class="reader-left" id="left"></div>
+
+<div class="book">
+
+<h1 class="book-name">
+
+{{ book.title }}
+
+</h1>
+
+<div class="book-author">
+
+{{ book.author_name }}
+
+</div>
+
+{% for page in pages %}
+
+<div class="page {% if forloop.first %}active{% endif %}">
+
+    <div class="page-content">
+
+        {{ page|linebreaks }}
+
+    </div>
+
+    <div class="page-number">
+
+        {{ forloop.counter }} / {{ pages|length }}
+
+    </div>
+
+</div>
+
+{% endfor %}
+
+<div id="progress-container">
+
+    <div id="progress-bar"></div>
+
+</div>
+
+</div>
+
+<div class="reader-right" id="right"></div>
+
+</div>
+
+<button class="arrow" id="prev">❮</button>
+
+<button class="arrow" id="next">❯</button>
+
+<script>
+
+let currentPage = 0;
+
+const pages = document.querySelectorAll(".page");
+
+const progressBar = document.getElementById("progress-bar");
+
+function showPage(index){
+
+    pages.forEach(page=>{
+
+        page.classList.remove("active");
+
+    });
+
+    pages[index].classList.add("active");
+
+    const percent=((index+1)/pages.length)*100;
+
+    progressBar.style.width=percent+"%";
+
+}
+
+showPage(0);
+
+function nextPage(){
+
+    if(currentPage<pages.length-1){
+
+        currentPage++;
+
+        showPage(currentPage);
+
+    }
+
+}
+
+function prevPage(){
+
+    if(currentPage>0){
+
+        currentPage--;
+
+        showPage(currentPage);
+
+    }
+
+}
+
+document.getElementById("next").onclick=nextPage;
+
+document.getElementById("prev").onclick=prevPage;
+
+document.getElementById("right").onclick=nextPage;
+
+document.getElementById("left").onclick=prevPage;
+
+document.addEventListener("keydown",function(e){
+
+    if(e.key==="ArrowRight"){
+
+        nextPage();
+
+    }
+
+    if(e.key==="ArrowLeft"){
+
+        prevPage();
+
+    }
+
+});
+
+/* ---------- FONT SIZE ---------- */
+
+let currentFont = 24;
+
+const pageContent=document.querySelectorAll(".page-content");
+
+function updateFont(){
+
+    pageContent.forEach(item=>{
+
+        item.style.fontSize=currentFont+"px";
+
+    });
+
+}
+
+document.getElementById("increase-font").onclick=function(){
+
+    if(currentFont<40){
+
+        currentFont++;
+
+        updateFont();
+
+    }
+
+}
+
+document.getElementById("decrease-font").onclick=function(){
+
+    if(currentFont>16){
+
+        currentFont--;
+
+        updateFont();
+
+    }
+
+}
+
+
+
+</script>
+
+</body>
+
+</html>

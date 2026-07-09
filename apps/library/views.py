@@ -64,6 +64,7 @@ def book_create(request):
             book.save()
 
             messages.success(request, "Book created successfully.")
+
             return redirect("book_list")
 
     else:
@@ -85,8 +86,8 @@ def book_update(request, pk):
 
         if form.is_valid():
             form.save()
-
             messages.success(request, "Book updated successfully.")
+
             return redirect("book_detail", pk=book.id)
 
     else:
@@ -106,12 +107,38 @@ def book_delete(request, pk):
 
     if request.method == "POST":
         book.delete()
-
         messages.success(request, "Book deleted successfully.")
+
         return redirect("book_list")
 
-    context = {
-        "book": book,
-    }
+    context = {"book": book}
 
     return render(request, "library/book_confirm_delete.html", context)
+
+def book_reader(request, pk):
+
+    book = get_object_or_404(Book, pk=pk)
+
+    text = book.text or ""
+
+    WORDS_PER_PAGE = 140
+
+    words = text.split()
+
+    pages = []
+
+    for i in range(0, len(words), WORDS_PER_PAGE):
+        page = " ".join(words[i:i + WORDS_PER_PAGE])
+        pages.append(page)
+
+    if not pages:
+        pages = ["This book has no text yet."]
+
+    return render(
+        request,
+        "library/book_reader.html",
+        {
+            "book": book,
+            "pages": pages,
+        },
+    )
